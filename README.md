@@ -10,4 +10,7 @@ Installation
 Clone this directory by 
 > git clone git://github.com/ajohlander/anjo-matlab.git
 
+Make sure to add the path to Matlab so it can be used from anywhere
+>addpath /.../anjo-matlab
+
 [irfu-matlab](https://github.com/irfu/irfu-matlab "IRFU's github") is required for these functions.
