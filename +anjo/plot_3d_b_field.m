@@ -45,7 +45,6 @@ if(strcmp(plotMode,'abs'))
 else
     legLD = [0.02,0.06];
     hLeg = irf_legend(h,legStr,legLD);
-    set(hLeg,'FontSize',20)
     %ylabel(h,'B [nT]','FontSize',20);
 end
 ylabel(h,'$B$ [nT]','FontSize',16,'interpreter','latex');
