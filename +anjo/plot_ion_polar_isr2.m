@@ -154,9 +154,9 @@ axis equal;
 hc = colorbar('peer',ax);
 ylabel(hc,'log_{10}F [s^3/km^6]')
 if showColorbar
-    hc.Visible = 'on';
+    set(hc,'Visible','on');
 else
-    hc.Visible = 'off';
+    set(hc,'Visible','off');
 end
 xlim(fn,[-velLim, velLim])
 ylim(fn,[-velLim, velLim])
