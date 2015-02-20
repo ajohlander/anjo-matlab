@@ -14,7 +14,7 @@ function [psdMat,tData] = get_one_hia_spin(t,scInd)
 tint = [t-10,t+10];
 [psdArray,tArray] = anjo.get_hia_data(tint,scInd,'default');
 
-dataInd = anjo.findClosestIndex(t,tArray);
+dataInd = anjo.find_closest_index(t,tArray);
 tData = tArray(dataInd:dataInd+1);
 
 psdMat = squeeze(psdArray(dataInd,:,:,:));
