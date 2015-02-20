@@ -1,6 +1,7 @@
 function [xIntersect,yIntersect] = intersect_line_data(k,m,xData,yData)
-%INTERSECT_LINE_DATA Summary of this function goes here
-%   Detailed explanation goes here
+%ANJO.INTERSECT_LINE_DATA Finds intersection between a line and data points
+%   [x,y] = ANJO.INTERSECT_LINE_DATA(k,x,xData,yData) returns intersect
+%   point between data and a line y = k*x+m.
 
 
 len = length(xData);
