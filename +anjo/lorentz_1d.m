@@ -1,60 +1,37 @@
 function [vel, xMin, Y] = lorentz_1d(eF,bF,v0,runTime)%,dT,nSlams)
-%ANJO.LORENTZ_1D performs test patrticle simulation
-%   vel = ANJO.LORENTZ_1D(eF,bF,v0,runTime) Detailed explanation goes here
+%ANJO.LORENTZ_1D performs a 1D test patrticle simulation
+%   ANJO.LORENTZ_1D(eF,bF,v0,runTime) runs a 1D simulation for a particle
+%   with initial velocity v0 in fields eF and bF. The simulation ends after
+%   runTime.
+%   vel = ANJO.LORENTZ_1D(eF,bF,v0,runTime) returns the velocity in a
+%   matrix with time data, vel = [t,vx,vy,vz].
+%   [vel,xMin] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the lowest
+%   value for the particle position acheived during the simulation.
+%   [vel,xMin] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the full
+%   simulation matrix Y = [x,y,z,vx,vy,vz].
 
 set_global_E_B(eF,bF);
 
-%n = floor(runTime/dT);
 tSpan = [0, runTime];
-
-%vel = zeros(n,4);
-
 
 xib = max(bF(:,1)); %initial position
 xie = max(eF(:,1));
 
+%Get initial position
 if xib<xie
     x = xib;
 else
     x = xie;
 end
 
-%xMin = x;
-
 
 y0 = [x,0,0,v0];
 
-
-% q = 1.602e-19;
-% mi = 1.6726e-27;
-
-% B = get_B_field(bField,x);
-% E = get_E_field(eField,x);
-
+% ode45 for accuracy and performance
 [T,Y] = ode45(@lorentz_force,tSpan,y0);
 
 vel = [T,Y(:,4),Y(:,5),Y(:,6)];
 xMin = min(Y(:,1));
-% 
-% for i = 1:n-1
-%     v = vel(i,2:4);
-%     
-%     B = get_B_field(bField,x);
-%     E = get_E_field(eField,x);
-%     
-%     a = q/mi*(E + cross(v,B));
-%     
-%     v = v + a*dT;
-%     x = x-v*nSlams'*dT;
-%     
-%     if(x<xMin)
-%         xMin = x;
-%     end
-%     
-%     vel(i+1,:) = [vel(i,1)+dT, v];
-%     
-% end
-
 
 end
 
@@ -64,14 +41,14 @@ function [dy] = lorentz_force(t,y)
 %   y = [x, y, z, vx, vy, vz]
 q = 1.602e-19;
 m = 1.67e-27;
-%m = m/1836;
+
 eF = get_E_field(y(1));
 [bF,inBounds] = get_B_field(y(1));
 F = q*(eF+cross([y(4),y(5),y(6)],bF));
 
 dy = zeros(6,1);
 
-if(inBounds)
+if(inBounds) %Sets velocities to NaN if out of box
     dy(1) = y(4);
     % dy(2) = y(5);
     % dy(3) = y(6);
@@ -80,7 +57,6 @@ if(inBounds)
     dy(5) = F(2)/m;
     dy(6) = F(3)/m;
 else
-    disp('lol')
     dy(1) = 0;
     % dy(2) = y(5);
     % dy(3) = y(6);
@@ -94,8 +70,6 @@ end
 
 
 function [interpE] = get_E_field(x) 
-%E Lorem
-%   Ipsum
 
 global eField
 if(x<min(eField(:,1)) || x>max(eField(:,1)))
@@ -109,8 +83,6 @@ end
 end
 
 function [interpB,inBox] = get_B_field(x)
-%E Lorem
-%   Ipsum
 
 global bField
 if(x<min(bField(:,1)) || x>max(bField(:,1)))
