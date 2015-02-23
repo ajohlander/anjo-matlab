@@ -21,7 +21,7 @@ if(nargin < 4)
 end
 
 
-bField = get_3d_b_field(tint,scInd,plotMode);
+bField = anjo.get_3d_b_field(tint,scInd,plotMode);
 
 switch plotMode
     case 'default'
