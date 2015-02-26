@@ -152,7 +152,7 @@ axes(ax);
 axis equal;
 
 hc = colorbar('peer',ax);
-ylabel(hc,'log_{10}F [s^3/km^6]')
+ylabel(hc,'$\log{F}$ [s$^3$km$^{-6}$]','FontSize', 16,'interpreter','latex')
 if showColorbar
     set(hc,'Visible','on');
 else
@@ -164,8 +164,8 @@ ylim(fn,[-velLim, velLim])
 grid off
 view(ax,2)
 
-xlabel(ax,'v_{x}   [km/s]','FontSize', 20)
-ylabel(ax,'v_{y}   [km/s]','FontSize', 20)
+xlabel(ax,'$v_{x}$   [kms$^{-1}$]','FontSize', 16,'interpreter','latex')
+ylabel(ax,'$v_{y}$   [kms$^{-1}$]','FontSize', 16,'interpreter','latex')
 
 
 end
