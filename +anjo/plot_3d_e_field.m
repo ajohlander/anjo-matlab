@@ -23,7 +23,7 @@ irf_plot(h,eField);
 legLD = [0.02,0.06];
 irf_legend(h,{'E_{x}','E_{y}','E_{z}'},legLD);
 
-ylabel('$E$ [mVm$^{-1}$]','FontSize',16,'interpreter','latex')
+ylabel(h,'$E$ [mVm$^{-1}$]','FontSize',16,'interpreter','latex')
 
 irf_zoom(h,'x',tint) 
 
