@@ -1,4 +1,4 @@
-function [bField] = plot_3d_b_field(h,tint,scInd,plotMode)
+function [bField] = plot_3d_b_field(h,x1,scInd,plotMode)
 %ANJO.PLOT_3D_B_FIELD plot 3D FGM data in GSE.
 %   ANJO.PLOT_3D_B_FIELD(h,tint,scInd) - plots components and amplitude of
 %   magnetic field for time interval tint for spacecraft scInd.
@@ -14,14 +14,20 @@ function [bField] = plot_3d_b_field(h,tint,scInd,plotMode)
 %   ANJO.PLOT_3D_E_FIELD
 
 
-%hideXLabel = isequal(get(h,'XTickLabel'),[]);
+hideXLabel = isequal(get(h,'XTickLabel'),[]);
 
 if(nargin < 4)
     plotMode = 'default';
 end
 
+if(nargin == 2) %B-field input!
+    bField = x1;
+    tint = [min(bField(:,1)),max(bField(:,1))];
+else
+    tint = x1;
+    bField = anjo.get_3d_b_field(tint,scInd,plotMode);
+end
 
-bField = anjo.get_3d_b_field(tint,scInd,plotMode);
 
 switch plotMode
     case 'default'
@@ -46,8 +52,15 @@ else
     irf_legend(h,legStr,legLD);
 end
 
+
 ylabel(h,'$B$ [nT]','FontSize',16,'interpreter','latex');
 
 irf_zoom(h,'x',tint)
+
+
+if(hideXLabel)
+    disp('halleluja!')
+    set(h,'XTickLabel',[])
+end
 
 end
