@@ -59,7 +59,6 @@ irf_zoom(h,'x',tint)
 
 
 if(hideXLabel)
-    disp('halleluja!')
     set(h,'XTickLabel',[])
 end
 
