@@ -1,5 +1,5 @@
 function [bField] = get_3d_b_field(tint,scInd,dataMode)
-%GET_3D_B_FIELD returns 3D FGM data in GSE.
+%ANJO.GET_3D_B_FIELD returns 3D FGM data in GSE.
 %   bField = ANJO.GET_3D_B_FIELD(tint,scInd) - returns components and
 %   amplitue of magnetic field for time interval tint for spacecraft scInd.
 %   bField = ANJO.GET_3D_B_FIELD(tint,scInd,plotMode)
