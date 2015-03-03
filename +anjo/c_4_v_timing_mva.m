@@ -12,7 +12,7 @@ function out = c_4_v_timing_mva(tint,column)
 %   as dotted arrows. The dotted arrows are not used in determining the
 %   maximum angle.
 %   In the second figure, the magnetic field is plotted in the
-%   LMN-system, where L=maximum, M=intermiediate and N = minimum.
+%   LMN-system, where L=maximum, M=intermediate and N = minimum.
 %
 %   A prompt asks the user to save the variables: velocity of discontinuity V,
 %   uncertainty in velocity dV, all 5 normal vectors in n, where
@@ -40,26 +40,14 @@ R = anjo.get_c_pos([tint(1)-30,tint(2)+30]);
 
 
 %---------------GUI-------------------
-fGUI = irf_plot(4,'newfigure');
-set(gcf,'PaperUnits','centimeters')
-xSize = 15; ySize = 15;
-xLeft = (21-xSize)/2; yTop = (30-ySize)/2;
-set(gcf,'PaperPosition',[xLeft yTop xSize ySize])
-set(gcf,'Position',[10 10 xSize*50 ySize*50])
-set(gcf,'paperpositionmode','auto') % to get the same printing as on screen
-clear xLeft xSize sLeft ySize yTop
+[fGUI,h] = anjo.afigure(4,[20,20]);
 
-h = zeros(1,4);
-h(1) = irf_panel('C1');
-h(2) = irf_panel('C2');
-h(3) = irf_panel('C3');
-h(4) = irf_panel('C4');
 hold(h(1))
 hold(h(2))
 hold(h(3))
 hold(h(4))
 
-%Bz
+%B-component
 pb = zeros(1,4);
 pb(1) = plot(h(1),b1(:,1),b1(:,column));
 pb(2) = plot(h(2),b2(:,1),b2(:,column));
