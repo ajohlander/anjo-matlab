@@ -6,9 +6,9 @@ function [f] = progress_pie(i,n,f)
 %   ANJO.PROGRESS_PIE(i,n,f) shows progress in the figure f.
 %
 %   Usage: 
-%       hWait = progress_pie(0,n);
+%       hWait = anjo.progress_pie(0,n);
 %       for i = 1:n
-%           progress_pie(i,n,hWait)
+%           anjo.progress_pie(i,n,hWait)
 %           ...
 %       end
 %       close(hWait)
@@ -43,19 +43,21 @@ if(round(i/n*nSlice)~=round((i-1)/n*nSlice) || nargin==2)
             'Tag','progpie',...
             'Interruptible', 'off', ...
             'DockControls', 'off', ...
-            'Visible','on');
-        
+            'Visible','on',...
+            'Color','White');
         
         h = axes('Parent', f,'Tag','progpie');
         
         draw_pie(i,n,nSlice,h);
-        
+        print_text(i,n);
+
     elseif(nargin == 3)
         set(f,'Visible','on');
         h = axes('Parent', f);
         draw_pie(i,n,nSlice,h);
-        
-        
+        set(get(h,'Title'),'String','')
+
+        print_text(i,n);
         
     end
 end
@@ -74,3 +76,14 @@ set(hp(1:2:end),'facecolor',c,'EdgeColor','none');
 set(hp(1:2:(nSlice-q-1)*2),'Visible','off');
 
 end
+
+
+
+function [h] = print_text(i,n)
+% 
+prcent = floor(i/n*100);
+progText = ['Progress: ',num2str(prcent),'%'];
+disp(progText)
+
+end
+
