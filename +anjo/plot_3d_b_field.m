@@ -23,6 +23,16 @@ end
 if(nargin == 2) %B-field input!
     bField = x1;
     tint = [min(bField(:,1)),max(bField(:,1))];
+    bSize = size(bField);
+    switch bSize(2)
+        case 5
+            plotMode = 'default';
+        case 4
+            plotMode = '3d';
+        case 2
+            plotMode = 'abs';
+    end
+    
 else
     tint = x1;
     bField = anjo.get_3d_b_field(tint,scInd,plotMode);
