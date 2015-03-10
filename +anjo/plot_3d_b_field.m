@@ -1,4 +1,4 @@
-function [bField] = plot_3d_b_field(h,x1,scInd,plotMode)
+function [bField] = plot_3d_b_field(x1,x2,scInd,plotMode)
 %ANJO.PLOT_3D_B_FIELD plot 3D FGM data in GSE.
 %   ANJO.PLOT_3D_B_FIELD(h,tint,scInd) - plots components and amplitude of
 %   magnetic field for time interval tint for spacecraft scInd.
@@ -8,23 +8,34 @@ function [bField] = plot_3d_b_field(h,x1,scInd,plotMode)
 %       '3d'        - plots only components.
 %       'abs'       - plots only amplitude.
 %
-%   bField = ANJO.PLOT_3D_B_FIELD(h,tint,scInd) also returns magnetic field.
+%   ANJO.PLOT_3D_B_FIELD(h,bField) plots the input B-field with the
+%   correct plot mode.
+%   ANJO.PLOT_3D_B_FIELD(bField) Initiates a new figure and plots the
+%   input B-field.
+%   bField = ANJO.PLOT_3D_B_FIELD(...) also returns magnetic field.
 %
 %   See also: ANJO.GET_3D_B_FIELD, ANJO.GET_3D_E_FIELD,
 %   ANJO.PLOT_3D_E_FIELD
 
 
-hideXLabel = isequal(get(h,'XTickLabel'),[]);
+
 
 if(nargin < 4)
     plotMode = 'default';
 end
 
-if(nargin == 2) %B-field input!
-    bField = x1;
+if(nargin <= 2) % B-field input!
+    if(nargin == 1) 
+        h = anjo.afigure(1);
+        bField = x1;
+        
+    elseif(nargin == 2)
+        h = x1;
+        bField = x2;
+    end
     tint = [min(bField(:,1)),max(bField(:,1))];
     bSize = size(bField);
-    switch bSize(2)
+    switch bSize(2) % Set plotMode after size of input B-field.
         case 5
             plotMode = 'default';
         case 4
@@ -33,8 +44,9 @@ if(nargin == 2) %B-field input!
             plotMode = 'abs';
     end
     
-else
-    tint = x1;
+else % Get data
+    h = x1;
+    tint = x2;
     bField = anjo.get_3d_b_field(tint,scInd,plotMode);
 end
 
@@ -44,21 +56,20 @@ switch plotMode
         legStr = {'B_{x}','B_{y}','B_{z}','|B|'};
     case '3d'
         legStr = {'B_{x}','B_{y}','B_{z}'};
-
     case 'abs'
         scColor = anjo.get_cluster_colors();
-
         set(h,'ColorOrder',[scColor{scInd}])
         %No legend
 end
 
+hideXLabel = isequal(get(h,'XTickLabel'),[]);
 irf_plot(h,bField);
 
 
 if(strcmp(plotMode,'abs'))
-    
+    % No legend
 else
-    legLD = [0.02,0.06];
+    legLD = [0.02,0.06]; % Left down
     irf_legend(h,legStr,legLD);
 end
 
