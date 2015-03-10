@@ -1,4 +1,4 @@
-function [H,h] = afigure(subNum,figSize)
+function [h] = afigure(subNum,figSize)
 %ANJO.AFIGURE Quick way to call irf_plot
 %   ANJO.AFIGURE(subNum) Initiate figure with number of panels subNum. Size of
 %   figure is set to 10x7 cm.
@@ -14,7 +14,7 @@ if(nargin == 1)
 end
 
 %Initiate figure
-H = irf_plot(subNum,'newfigure');
+irf_plot(subNum,'newfigure');
 set(gcf,'PaperUnits','centimeters')
 xSize = figSize(1); ySize = figSize(2);
 xLeft = (21-xSize)/2; yTop = (30-ySize)/2;
