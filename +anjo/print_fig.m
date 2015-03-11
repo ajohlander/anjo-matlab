@@ -4,7 +4,7 @@ function [out] = print_fig(x1,x2,x3)
 %   fileName.
 %   ANJO.PRINT_FIG(figNum,fileName) exports figure with number
 %   figNum to a .eps named fileName.
-%   ANJO.PRINT_FIG(fileName,fileTyp) exports current figure to a file named
+%   ANJO.PRINT_FIG(fileName,fileType) exports current figure to a file named
 %   fileName with format fileType.
 %   ANJO.PRINT_FIG(figNum,fileName,fileType) exports figure with number
 %   figNum to a file named fileName with format fileType.
