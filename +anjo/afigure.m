@@ -31,6 +31,12 @@ if(anjo.is_new_matlab()) % Awesome new code
     f.Position = [10 10 xSize*50 ySize*50];
     f.PaperPositionMode = 'auto';
     
+    for i = 1:subNum
+        if(i ~= subNum)
+            h(i).XTickLabel = '';
+        end
+    end
+    
 else
     
     %Initiate figure
