@@ -7,7 +7,7 @@ function [vel, xMin, Y] = lorentz_1d(eF,bF,v0,runTime)%,dT,nSlams)
 %   matrix with time data, vel = [t,vx,vy,vz].
 %   [vel,xMin] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the lowest
 %   value for the particle position acheived during the simulation.
-%   [vel,xMin] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the full
+%   [vel,xMin,Y] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the full
 %   simulation matrix Y = [x,y,z,vx,vy,vz].
 
 set_global_E_B(eF,bF);
