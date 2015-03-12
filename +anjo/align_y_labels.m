@@ -1,23 +1,43 @@
 function [] = align_y_labels(h)
 %ANJO.ALIGN_Y_LABELS fixes the x-position of the y-labels
-%   Does not really work now
+%   Only works if panels have the same x-axis. Not the case with field and
+%   particle data for example. Fix in particle data or here? (or don't care?)
 
-minXPos = 0;
 
-for i = 1:length(h)
-    lH = get(h(i),'YLabel');
-    pos = get(lH,'Position');
-    xPos = pos(1);
-    if(xPos<minXPos)
-        minXPos = xPos;
+minXPos = +Inf;
+
+if(anjo.is_new_matlab())
+    for i = 1:length(h)
+        lH = h(i).YLabel;
+        pos = lH.Position;
+        xPos = pos(1);
+    
+        if(xPos<minXPos)
+            minXPos = xPos;
+        end
     end
+    for i = 1:length(h)
+        lH = h(i).YLabel;
+        pos = lH.Position;
+        lH.Position = [minXPos,pos(2),pos(3)];
+    end
+    
+else
+    for i = 1:length(h)
+        lH = get(h(i),'YLabel');
+        pos = get(lH,'Position');
+        xPos = pos(1);
+        if(xPos<minXPos)
+            minXPos = xPos;
+        end
+    end
+    
+    for i = 1:length(h)
+        lH = get(h(i),'YLabel');
+        pos = get(lH,'Position');
+        set(lH,'Position',[minXPos,pos(2),pos(3)]);
+    end
+    
 end
-
-for i = 1:length(h)
-    lH = get(h(i),'YLabel');
-    pos = get(lH,'Position');
-    set(lH,'Position',[minXPos,pos(2),pos(3)]);
-end
-
 end
 
