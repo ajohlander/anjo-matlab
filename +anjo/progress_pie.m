@@ -13,7 +13,7 @@ function [f] = progress_pie(i,n,f)
 %       end
 %       close(hWait)
 
-
+pT = 0.001; %pause time. Makes time ~ 20 x pT seconds longer
 nSlice = 20;
 
 if(round(i/n*nSlice)~=round((i-1)/n*nSlice) || nargin==2)
@@ -49,14 +49,16 @@ if(round(i/n*nSlice)~=round((i-1)/n*nSlice) || nargin==2)
         h = axes('Parent', f,'Tag','progpie');
         
         draw_pie(i,n,nSlice,h);
+        pause(pT)
         print_text(i,n);
+
 
     elseif(nargin == 3)
         set(f,'Visible','on');
         h = axes('Parent', f);
         draw_pie(i,n,nSlice,h);
         set(get(h,'Title'),'String','')
-
+        pause(pT)
         print_text(i,n);
         
     end
