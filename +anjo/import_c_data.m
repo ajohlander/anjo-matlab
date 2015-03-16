@@ -1,4 +1,4 @@
-function [] = import_data(x1)
+function [] = import_c_data(x1)
 %ANJO.IMPORT_C_DATA Downloads data from CSA, stores it in ~/Data/caalocal.
 %   Always downloads for all s/c.
 %   ANJO.IMPORT_C_DATA a calendar shows up that lets the user choose the time
