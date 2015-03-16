@@ -46,7 +46,7 @@ if(getData.fgmData == 1)
     caa_download(tint,'C?_CP_FGM_FULL');
 end
 if(getData.efwData == 1)
-    caa_download(tint,'C?_CP_EFW_L?_E3D_INERT');
+    caa_download(tint,'C?_CP_EFW_L2_E3D_INERT');
 end
 if(getData.cisHiaData == 1)
     caa_download(tint,'C?_CP_CIS-HIA_HS_MAG_IONS_PSD');
