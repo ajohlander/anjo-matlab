@@ -18,3 +18,9 @@ Make sure to add the path to Matlab so it can be used from anywhere. Add the fol
 Compatibility
 -------------------
 Hopefully, everything is compatible with Matlab 2014b and later. Most functions are are compatible with 2014a as well. 
+
+Usage
+----------
+Use the functions from any directory using anjo.function_name(...). 
+
+Most "get functions" requires data to have been downloaded to a directory "~/Data/caalocal". Can use anjo.import_c_data to download data to this local directory.
