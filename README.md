@@ -21,6 +21,8 @@ Hopefully, everything is compatible with Matlab 2014b and later. Most functions 
 
 Usage
 ----------
-Use the functions from any directory using anjo.function_name(...). 
+Use the functions from any directory using:
+>  anjo.function_name(...)
+
 
 Most "get functions" requires data to have been downloaded to a directory "~/Data/caalocal". Can use anjo.import_c_data to download data to this local directory.
