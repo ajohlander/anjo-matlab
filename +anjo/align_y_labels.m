@@ -1,5 +1,5 @@
 function [] = align_y_labels(h)
-%ANJO.ALIGN_Y_LABELS fixes the x-position of the y-labels
+%ANJO.ALIGN_Y_LABELS Fixes the x-position of the y-labels
 %   Only works if panels have the same x-axis. Not the case with field and
 %   particle data for example. Fix in particle data or here? (or don't care?)
 
