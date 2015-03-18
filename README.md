@@ -26,6 +26,7 @@ Use the functions from any directory using:
 
 View help for the repo by typing in Matlab
 > help anjo
+
 or 
 > doc anjo
 
