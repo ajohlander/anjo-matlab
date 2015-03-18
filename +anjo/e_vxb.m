@@ -5,6 +5,9 @@ function [eF] = e_vxb(bF,v,alpha)
 %   calculated by: E = -v x B.
 %   eF = ANJO.E_VXB(bF,v,alpha) introcuces a scalar constant alpha so
 %   that: E = alpha*(-v x B).
+%
+%   See also: ANJO.E_JXB, ANJO.TRANSFORM_E_FIELD
+
 
 
 if(nargin == 2)

@@ -5,6 +5,8 @@ function [eF] = e_jxb(bF,v,n,alpha)
 %   calculated by: E = jxB/ne.
 %   eF = ANJO.E_JXB(bF,v,n,alpha) introcuces a scalar constant alpha so
 %   that: E = alpha*jxB/ne.
+%
+%   See also: IRF_JZ, ANJO.E_VXB, ANJO.TRANSFORM_E_FIELD
 
 if(nargin == 3)
     alpha = 1;
