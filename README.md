@@ -24,5 +24,10 @@ Usage
 Use the functions from any directory using:
 >  anjo.function_name(...)
 
+View help for the repo by typing in Matlab
+> help anjo
+or 
+> doc anjo
+
 
 Most "get functions" requires data to have been downloaded to a directory "~/Data/caalocal". Can use anjo.import_c_data to download data to this local directory.
