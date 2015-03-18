@@ -23,7 +23,7 @@ elseif(nargin == 2)
     tint = [min(eField(:,1)),max(eField(:,1))];
 else
     tint = x2;
-    eField = get_3d_e_field(tint,scInd);
+    eField = anjo.get_3d_e_field(tint,scInd);
 end
 
 hideXLabel = isequal(get(h,'XTickLabel'),[]);
