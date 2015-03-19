@@ -1,11 +1,11 @@
 function [f] = progress_pie(i,n,f)
-%PROGRESS_PIE pie chart showing progress of a calculation
+%ANJO.PROGRESS_PIE pie chart showing progress of a calculation
 %   f = ANJO.PROGRESS_PIE(i,n) shows the progress inside a loop where i is the
 %   current index and n is the total number of iterations. Returns figure
 %   handle f.
 %   ANJO.PROGRESS_PIE(i,n,f) shows progress in the figure f.
 %
-%   Usage: 
+%   Examples: 
 %       hWait = anjo.progress_pie(0,n);
 %       for i = 1:n
 %           anjo.progress_pie(i,n,hWait)
