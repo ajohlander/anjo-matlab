@@ -2,23 +2,26 @@ function [out] = print_fig(x1,x2,x3)
 %ANJO.PRINT_FIG Exports figure to file.
 %   ANJO.PRINT_FIG(fileName) exports current figure to a .eps with name
 %   fileName.
-%   ANJO.PRINT_FIG(figNum,fileName) exports figure with number
-%   figNum to a .eps named fileName.
+%   ANJO.PRINT_FIG(f,fileName) exports figure with handle f to a .eps named
+%   fileName. If f is an integer, the figure with that number is printed.
 %   ANJO.PRINT_FIG(fileName,fileType) exports current figure to a file named
 %   fileName with format fileType.
-%   ANJO.PRINT_FIG(figNum,fileName,fileType) exports figure with number
-%   figNum to a file named fileName with format fileType.
+%   ANJO.PRINT_FIG(f,fileName,fileType) exports figure with handle f
+%   to a file named fileName with format fileType.
 %
-%   Only works for .eps at this time!!
+%   File types:
+%       'eps' - vector graphics
+%       'pdf' - vector graphics, white space will be included
+%       'png' - lossless compression
 %
 %   TODO: 
-%       -Enable figure handle input instead of figure number.
-%       -Fix for .pdf
+%       - Remove white space for pdf
 
 
-
+%% Input
 figNum = 0;
 fileType = 'eps';
+handleInput = 0;
 
 if(nargin == 1)         % only name
     fileName = x1;
@@ -26,31 +29,72 @@ elseif(nargin == 2)
     if(ischar(x1))      % name and type
         fileName = x1;
         fileType = x2;
-    else                % number and name
+    elseif(isnumeric(x1) && floor(x1)==x1) % number and name
         figNum = x1;
         fileName = x2;
+    elseif(~isnumeric(x1) && isvalid(x1)) % handle and name
+        handleInput = 1;
+        fileName = x2;
+    else
+        irf.log('critical','unknown input type')
+        return
     end
-elseif(nargin == 3)     % number, name and type
-    figNum = x1;
+    
+elseif(nargin == 3)     % number/handle, name and type 
+    if(isnumeric(x1) && floor(x1)==x1) %number
+        figNum = x1;
+    elseif(~isnumeric(x1) && isvalid(x1)) % handle
+        handleInput = 1;
+    else
+        irf.log('critical','unknown input type')
+        return
+    end
     fileName = x2;
     fileType = x3;
 end
 
-if(figNum == 0) %never assigned
-    f = gcf;
-    figNum = f.Number;
+%% File flags %%
+switch fileType
+    case 'eps'
+        fileFlag = '-depsc';
+    case 'pdf'
+        fileFlag = '-dpdf';
+    case 'png'
+        fileFlag = '-dpng';
+    otherwise
+        irf.log('critical','unknown file type')
+        return
 end
 
+%% Set figure handle
+if(handleInput)
+    switch x1.Type;
+        case 'figure'
+            irf.log('warning','figure input')
+            f = x1;
+        case 'axes'
+            irf.log('warning','axes input, printing parent')
+            f = x1.Parent;
+        otherwise
+            irf.log('critical','unknown input type')
+            return
+    end
+elseif(figNum == 0) %never assigned
+    irf.log('warning','printing current figure')
+    f = gcf;
+else
+    irf.log('warning',['printing figure ',num2str(figNum)])
+    f = figure(figNum);
+end
+
+%% Exporting figure
 fileStr = [fileName,'.',fileType];
-% make current figure
-figure(figNum) 
 
 if(nargout == 1)
-    out = gcf;
+    out = f;
 end
 
 % Exporting the figure
-print(gcf,'-depsc','-loose','-painters',fileStr) 
-
+print(f,fileFlag,'-loose','-painters',fileStr) 
 
 end
