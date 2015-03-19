@@ -1,6 +1,6 @@
 function [vRefl] = reflect_vector(vSW,vSLAM)
-%REFLECT_VECTOR 
-%   vRefl = REFLECT_VECTOR(vSW,vSLAM) returns the velocity of reflected ions
+%ANJO.REFLECT_VECTOR Mirrors a velocity vector on a moving plane.
+%   vRefl = ANJO.REFLECT_VECTOR(vSW,vSLAM) returns the velocity of reflected ions
 %   given solar wind and SLAMS velocities.
 
 

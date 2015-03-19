@@ -1,5 +1,5 @@
 % +ANJO
-% Version 0 18-mar-2015
+% Version 000 19-mar-2015
 %
 % Files
 %   afigure             - ANJO.AFIGURE Quick way to call irf_plot
@@ -32,6 +32,6 @@
 %   plot_sim_vel        - ANJO.PLOT_SIM_VEL plots final velocity vs initial velocity
 %   print_fig           - ANJO.PRINT_FIG Exports figure to file.
 %   progress_pie        - pie chart showing progress of a calculation
-%   reflect_vector      - 
+%   reflect_vector      - ANJO.REFLECT_VECTOR Mirrors a velocity vector on a moving plane.
 %   sph2car             - Transforms coordinates from spherical to cartesian
 %   transform_e_field   - ANJO.TRANSFORM_E_FIELD Transforms electric field to another inertial frame
