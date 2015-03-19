@@ -53,7 +53,7 @@ elseif(nargin == 3)     % number/handle, name and type
     fileType = x3;
 end
 
-%% File flags %%
+%% File flags 
 switch fileType
     case 'eps'
         fileFlag = '-depsc';
