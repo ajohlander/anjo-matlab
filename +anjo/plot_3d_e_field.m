@@ -13,15 +13,16 @@ function [eField] = plot_3d_e_field(x1,x2,scInd)
 %   ANJO.GET_3D_B_FIELD
 
 
-if(nargin == 1) %E-field input!
+if(nargin == 1) % E-field input!
     h = anjo.afigure(1);
     eField = x1;
     tint = [min(eField(:,1)),max(eField(:,1))];
-elseif(nargin == 2)
+elseif(nargin == 2) % handle and field
     h = x1;
-    eField = x2;
+    eField = x2; 
     tint = [min(eField(:,1)),max(eField(:,1))];
-else
+else % three inputs
+    h = x1;
     tint = x2;
     eField = anjo.get_3d_e_field(tint,scInd);
 end
