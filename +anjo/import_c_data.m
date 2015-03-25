@@ -1,4 +1,4 @@
-function [] = import_c_data(x1)
+function [] = import_c_data(x1,x2)
 %ANJO.IMPORT_C_DATA Downloads data from CSA, stores it in ~/Data/caalocal.
 %   Always downloads for all s/c.
 %   ANJO.IMPORT_C_DATA a calendar shows up that lets the user choose the time
@@ -9,7 +9,10 @@ function [] = import_c_data(x1)
 %   calendar.
 %   ANJO.IMPORT_C_DATA(mode) if input is a string the mode specifies the
 %   download instead of quesitions.
+%   ANJO.IMPORT_C_DATA(tint,mode) manual input.
 %   
+%   Remember to run local.c_update afterwards.
+%
 %   mode:
 %       'fgm'   - Only downloads FGM data.
 %       ...
@@ -37,7 +40,9 @@ elseif(nargin == 1)
         tint = get_ui_date();
         getData = set_get_data(getData,x1);
     end
-    
+elseif(nargin == 2)
+    tint = x1;
+    getData = set_get_data(getData,x2);
 end
 
 
