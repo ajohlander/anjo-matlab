@@ -21,7 +21,7 @@ end
 set(hsf,'EdgeColor','none')
 view(h,2)
 xlim(h,tint)
-
+caxis(colLim)
 ylabel(h,'$\log{E}$ [eV]','FontSize',16,'interpreter','latex')
 legStr = ['C',num2str(scInd),'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];
 irf_legend(h,{legStr},[0.02, 0.05])

@@ -1,4 +1,4 @@
-function [h,hc] = plot_ion_polar_isr2(psdMat,fn,showColorbar)
+function [h,hc] = plot_ion_polar_isr2(AX,psdMat,showColorbar)
 %PLOT_ION_POLAR_ISR2 plot CIS-HIA data in velocity space.
 %   PLOT_ION_POLAR_ISR2(psdMat,fn) plots ion data stored in psdMat (matrix
 %   of size 8x16x31) in a figure (or axis?) handle fn. The function assumes
@@ -132,7 +132,8 @@ logpsdXY = log10(psdXY); %logarithm
 % Plot everything
 
 
-h = surf(fn,X,Y,logpsdXY,'EdgeColor', 'none');
+h = surf(AX,X,Y,logpsdXY);%,'EdgeColor', 'none');
+h.EdgeColor = 'none';
 %shading flat 
 
 
@@ -155,11 +156,14 @@ hc = colorbar('peer',ax);
 ylabel(hc,'$\log{F}$ [s$^3$km$^{-6}$]','FontSize', 16,'interpreter','latex')
 if showColorbar
     set(hc,'Visible','on');
+        yL = AX.YLabel;
+    yL.Visible = 'off';
 else
     set(hc,'Visible','off');
+
 end
-xlim(fn,[-velLim, velLim])
-ylim(fn,[-velLim, velLim])
+xlim(ax,[-velLim, velLim])
+ylim(ax,[-velLim, velLim])
 
 grid off
 view(ax,2)
