@@ -1,11 +1,11 @@
 function [h,hc] = plot_ion_polar_isr2(AX,psdMat,showColorbar)
-%PLOT_ION_POLAR_ISR2 plot CIS-HIA data in velocity space.
-%   PLOT_ION_POLAR_ISR2(psdMat,fn) plots ion data stored in psdMat (matrix
+%ANJO.PLOT_ION_POLAR_ISR2 plot CIS-HIA data in velocity space.
+%   ANJO.PLOT_ION_POLAR_ISR2(psdMat,fn) plots ion data stored in psdMat (matrix
 %   of size 8x16x31) in a figure (or axis?) handle fn. The function assumes
 %   that all ions are protons.
-%   h = PLOT_ION_POLAR_ISR2(psdMat,fn) returns axis handle h for the surf
+%   hsf = ANJO.PLOT_ION_POLAR_ISR2(psdMat,fn) returns axis handle hsf for the surf
 %   plot.
-
+%
 % NB. only for XY-plane so far 
 
 mp = 1.67262178e-27; %proton mass

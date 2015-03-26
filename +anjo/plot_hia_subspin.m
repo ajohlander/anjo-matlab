@@ -1,7 +1,17 @@
 function [hsf,ionMat,t] = plot_hia_subspin(h,tint,scInd,plotMode,colLim)
-%PLOT_HIA_SUBSPIN Summary of this function goes here
-%   Detailed explanation goes here
-
+%ANJO.PLOT_HIA_SUBSPIN plots data from HIA in phase space density [s^3km^-6].
+%   [hsf,ionMat,t] = ANJO.PLOT_HIA_SUBSPIN(h,tint,scInd,mode,colLim) plots
+%   HIA data in phase space density. Returns data in ionMat and time vector
+%   t. Input tint is the time interval for the data, scInd is the
+%   spacecraft number (1 or 3) and colLim is the limits of the colorbar.
+%
+%   mode:
+%       'default'   - returns full 4-D matrix.
+%       'energy'    - integrates over polar angle
+%
+%   See also: ANJO.GET_HIA_DATA
+%
+%   ONLY WORKS FOR SUBSPIN DATA
 
 tintData = [tint(1)-12,tint(2)+12];
 [ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode);
