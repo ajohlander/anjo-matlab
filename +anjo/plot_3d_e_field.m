@@ -1,9 +1,9 @@
-function [eField] = plot_3d_e_field(x1,x2,scInd)
+function [out] = plot_3d_e_field(x1,x2,scInd)
 %ANJO.PLOT_3D_E_FIELD plot 3D EFW data in ISR2.
-%   ANJO.PLOT_3D_E_FIELD(h,tint,scInd) plots 3D electric field data from EFW
+%   ANJO.PLOT_3D_E_FIELD(AX,tint,scInd) plots 3D electric field data from EFW
 %   data in ISR2 during the time interval tint and for s/c number scInd =
 %   1,2,3,4.
-%   ANJO.PLOT_3D_E_FIELD(h,eField) plots the input E-field with the
+%   ANJO.PLOT_3D_E_FIELD(AX,eField) plots the input E-field with the
 %   correct plot mode.
 %   ANJO.PLOT_3D_E_FIELD(eField) Initiates a new figure and plots the
 %   input E-field.
@@ -14,31 +14,35 @@ function [eField] = plot_3d_e_field(x1,x2,scInd)
 
 
 if(nargin == 1) % E-field input!
-    h = anjo.afigure(1);
+    AX = anjo.afigure(1);
     eField = x1;
     tint = [min(eField(:,1)),max(eField(:,1))];
 elseif(nargin == 2) % handle and field
-    h = x1;
+    AX = x1;
     eField = x2; 
     tint = [min(eField(:,1)),max(eField(:,1))];
 else % three inputs
-    h = x1;
+    AX = x1;
     tint = x2;
     eField = anjo.get_3d_e_field(tint,scInd);
 end
 
-hideXLabel = isequal(get(h,'XTickLabel'),[]);
-irf_plot(h,eField);
+hideXLabel = isequal(get(AX,'XTickLabel'),[]);
+irf_plot(AX,eField);
 
 legLD = [0.02,0.06];
-irf_legend(h,{'E_{x}','E_{y}','E_{z}'},legLD);
+irf_legend(AX,{'E_{x}','E_{y}','E_{z}'},legLD);
 
-ylabel(h,'$E$ [mVm$^{-1}$]','FontSize',16,'interpreter','latex')
+anjo.label(AX,'$E$ [mVm$^{-1}$]')
 
-irf_zoom(h,'x',tint)
+irf_zoom(AX,'x',tint)
 
 if(hideXLabel)
-    set(h,'XTickLabel',[])
+    set(AX,'XTickLabel',[])
+end
+
+if(nargout == 1)
+    out = eField;
 end
 
 end
