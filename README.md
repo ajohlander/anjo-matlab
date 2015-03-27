@@ -17,7 +17,7 @@ Make sure to add the path to Matlab so it can be used from anywhere. Add the fol
 
 Compatibility
 -------------------
-Hopefully, everything is compatible with Matlab 2014b and later. Most functions are are compatible with 2014a as well. 
+Several functions related to plotting only works in Matlab 2014b or newer.
 
 Usage
 ----------
