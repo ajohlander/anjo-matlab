@@ -1,5 +1,5 @@
 function [out] = label(varargin)
-%ANJO.LABEL   Adds label to axis
+%ANJO.LABEL   Adds label to axis.
 %
 %   ANJO.LABEL(AX,...) sets label for specified axes handle.
 %   
@@ -49,6 +49,12 @@ end
 hLabel.String = textStr;
 hLabel.FontSize = 16;
 hLabel.Interpreter = 'latex';
+
+% % Make sure x-label is visible
+% if(strcmp(axis,'x')) 
+%     anjo.fix_x_label(AX);
+% end
+
 
 if(nargout == 1)
     out = hLabel;
