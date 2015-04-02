@@ -19,11 +19,11 @@ end
 switch plotMode
     case '3d'
         irf_plot(h,vFinal/1e3)
-        ylabel(h,'$v_f$ [kms$^{-1}$]','interpreter','latex','FontSize',16)
+        anjo.label(h,'y','$v_{f}$ [kms$^{-1}$]')
         irf_legend(h,{'v_x','v_y','v_z'},[0.95,0.05])
     case 'x'
         irf_plot(h,vFinal(:,1:2)/1e3)
-        ylabel(h,'$v_x,f$ [kms$^{-1}$]','interpreter','latex','FontSize',16)    
+        anjo.label(h,'y','$v_{x,f}$ [kms$^{-1}$]')
 end
 
 
@@ -31,7 +31,7 @@ end
 if(hideXLabel)
     set(h,'XTickLabel',[])
 else
-    xlabel(h,'$v_i$ [kms$^{-1}$]','interpreter','latex','FontSize',16)
+    anjo.label(h,'x','$v_i$ [kms$^{-1}$]')
 end
 
 
