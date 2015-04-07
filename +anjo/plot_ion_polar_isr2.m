@@ -153,7 +153,7 @@ axes(ax);
 axis equal;
 
 hc = colorbar('peer',ax);
-ylabel(hc,'$\log{F}$ [s$^3$km$^{-6}$]','FontSize', 16,'interpreter','latex')
+anjo.label(hc,'$\log{F}$ [s$^3$km$^{-6}$]')
 if showColorbar
     set(hc,'Visible','on');
         yL = AX.YLabel;
@@ -168,8 +168,8 @@ ylim(ax,[-velLim, velLim])
 grid off
 view(ax,2)
 
-xlabel(ax,'$v_{x}$   [kms$^{-1}$]','FontSize', 16,'interpreter','latex')
-ylabel(ax,'$v_{y}$   [kms$^{-1}$]','FontSize', 16,'interpreter','latex')
+anjo.label(ax,'x','$v_{x}$   [kms$^{-1}$]')
+anjo.label(ax,'y','$v_{y}$   [kms$^{-1}$]')
 
 
 end
