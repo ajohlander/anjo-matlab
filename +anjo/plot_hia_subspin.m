@@ -22,16 +22,21 @@ hideXLabel = isequal(get(h,'XTickLabel'),[]);
 
 switch plotMode
     case 'energy'
-        hsf = surf(h,t,log10(etab),log10(ionMat'));
-        ylim(h,[0,max(log10(etab))])
+        hsf = surf(h,t,(etab),log10(ionMat'));
+        %ylim(h,[0,max(log10(etab))])
         labStr = '$\log{E}$ [eV]';
+        h.YScale = 'log';
+        h.YTick = [1e1, 1e2, 1e3, 1e4];
+    case 'polar'
+        disp('no')
         
 end
+
 
 set(hsf,'EdgeColor','none')
 view(h,2)
 xlim(h,tint)
-caxis(colLim)
+%caxis(colLim)
 anjo.label(h,labStr)
 legStr = ['C',num2str(scInd),'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];
 irf_legend(h,{legStr},[0.02, 0.05])
