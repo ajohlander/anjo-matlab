@@ -6,6 +6,7 @@ function [ionMat,t] = get_hia_data(tint,scInd,dataMode)
 %
 %   mode:
 %       'default'   - returns full 4-D matrix.
+%       '3d'        - like default but matrix N*16x8x31
 %       'energy'    - integrates over polar angle
 %
 %   See also: ANJO.GET_ONE_HIA_SPIN
@@ -50,6 +51,26 @@ if(nargin == 3)
             end
             t(tInd:tInd+15) = tArray(i)+linspace(0,tSpin*15/16,16);
         end
+    elseif(strcmp(dataMode,'3d'))
+        
+        tNum = size(ionArray,1);
+        ionMat = zeros(8,tNum*16,31);
+        t = zeros(1,tNum*16);
+        
+        
+        for i = 1:tNum
+            tInd = (i-1)*16+1;
+            ionMat(:,tInd:tInd+15,:) = squeeze(ionArray(i,:,:,:));
+            
+            %recalculate tSpin everytime
+            if(i == tNum)
+                tSpin = mean(diff(tArray));
+            else
+                tSpin = tArray(i+1)-tArray(i);
+            end
+            t(tInd:tInd+15) = tArray(i)+linspace(0,tSpin*15/16,16);
+        end
+        ionMat = permute(ionMat,[2,1,3]);
     end
 end
 
