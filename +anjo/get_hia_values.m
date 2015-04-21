@@ -9,7 +9,6 @@ function [x1,x2,x3] = get_hia_values(value)
 %       'phi'   - returns azimuthal angle in degrees.
 %       'etab'  - returns energy values in eV.
 %
-%   TODO: make polar angle th -> [0,180].
 
 if nargin == 0
     x1 = get_theta();
@@ -32,12 +31,20 @@ end
 function th = get_theta()
     th = [-78.750, -56.250, -33.750, -11.250, 11.250, 33.750,...
         56.250,78.750];
+    th = 90-th;
+
 end
 
 function phi = get_phi()
     phi = [134.583 112.083 89.583 67.083 44.583 22.083 -0.417 -22.917...
         -45.417 -67.917 -90.417 -112.917 -135.417 -157.917 179.583 ...
         157.083];
+
+    for i = 1:length(phi)
+        if(phi(i)<0)
+            phi(i) = 360+phi(i);
+        end
+    end
 end
 
 function eTab = get_e_tab()
