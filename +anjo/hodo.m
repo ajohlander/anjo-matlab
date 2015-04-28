@@ -1,14 +1,13 @@
 function [y1,y2] = hodo(varargin)
-%HODO Plots B-field in hodograms in an LMN frame.
+%ANJO.HODO Plots B-field in hodograms in an LMN frame.
 %
-%   h = HODO(B,scInd) Initiates a figure and plots a hodogram of magnetic
+%   h = ANJO.HODO(B,scInd) Initiates a figure and plots a hodogram of magnetic
 %   field B for spacecraft number scInd in an LMN frame, returns vector of
 %   axes handles h. The red dot in the plots indicates start time.
 %   
-%   [h,v] = HODO(B) also returns column vector with LMN eigenvectors v.
+%   [h,v] = ANJO.HODO(B) also returns column vector with LMN eigenvectors v.
 %
 %   TODO:
-%       Spacecraft index in input.
 %       Arrows in plot?
 
 %% Input

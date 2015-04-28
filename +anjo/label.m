@@ -1,5 +1,5 @@
 function [out] = label(varargin)
-%ANJO.LABEL   Adds label to axis.
+%ANJO.LABEL Adds label to axis.
 %
 %   ANJO.LABEL(AX,...) sets label for specified axes handle.
 %   

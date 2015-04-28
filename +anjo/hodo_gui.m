@@ -1,6 +1,6 @@
 function [out] = hodo_gui(B,scInd)
-%HODO_GUI GUI for creating hodograms.
-%   HODO_GUI(B,scInd) Opens a plot with magnetic field B. Click start and
+%ANJO.HODO_GUI GUI for creating hodograms.
+%   ANJO.HODO_GUI(B,scInd) Opens a plot with magnetic field B. Click start and
 %   stop time for a hodogram. Quit by closing the GUI window.
 
 [h,~] = anjo.afigure(1,[15,8]);
