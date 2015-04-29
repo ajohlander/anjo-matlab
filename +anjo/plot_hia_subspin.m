@@ -27,6 +27,8 @@ switch plotMode
         labStr = '$\log{E}$ [eV]';
         h.YScale = 'log';
         h.YTick = [1e1, 1e2, 1e3, 1e4];
+        h.Box = 'on';
+        h.YLim = [1,3e4];
     case 'polar'
         disp('no')
         
