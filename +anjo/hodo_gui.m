@@ -1,7 +1,10 @@
 function [out] = hodo_gui(B,scInd)
 %ANJO.HODO_GUI GUI for creating hodograms.
+%
 %   ANJO.HODO_GUI(B,scInd) Opens a plot with magnetic field B. Click start and
 %   stop time for a hodogram. Quit by closing the GUI window.
+%   
+%   See also: ANJO.HODO
 
 [h,~] = anjo.afigure(1,[15,8]);
 
@@ -31,13 +34,12 @@ while true
     hMark = irf_pl_mark(h,tlim);
     
     % Plots hodogram
-    hHodo(:,nHodo) = hodo(Bcut,scInd);
+    hHodo(:,nHodo) = anjo.hodo(Bcut,scInd);
     nHodo = nHodo+1;
     
     % Hack to make loop work. Why does Matlab do this?
     pause(0.5);
 end
-
 
 end
 
@@ -58,6 +60,4 @@ ind = [anjo.find_closest_index(tint(1),t),...
 
 Bcut = B(ind(1):ind(2),:);
 tlim = B(ind,1)';
-
-
 end

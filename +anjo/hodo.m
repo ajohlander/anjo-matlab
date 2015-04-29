@@ -6,6 +6,8 @@ function [y1,y2] = hodo(varargin)
 %   axes handles h. The red dot in the plots indicates start time.
 %   
 %   [h,v] = ANJO.HODO(B) also returns column vector with LMN eigenvectors v.
+%   
+%   See also: ANJO.HODO_GUI
 %
 %   TODO:
 %       Arrows in plot?
