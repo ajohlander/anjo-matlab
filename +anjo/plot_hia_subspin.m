@@ -15,7 +15,7 @@ function [hsf,ionMat,t] = plot_hia_subspin(h,tint,scInd,plotMode,colLim)
 
 tintData = [tint(1)-12,tint(2)+12];
 [ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode);
-[~,~,etab] = anjo.get_hia_values('all');
+[th,~,etab] = anjo.get_hia_values('all');
 
 hideXLabel = isequal(get(h,'XTickLabel'),[]);
 
@@ -30,10 +30,13 @@ switch plotMode
         h.Box = 'on';
         h.YLim = [1,3e4];
     case 'polar'
-        disp('no')
-        
+        hsf = surf(h,t,th,log10(ionMat'));
+        %ylim(h,[0,max(log10(etab))])
+        labStr = '$\theta [deg]$ [eV]';
+        %h.YTick = [1e1, 1e2, 1e3, 1e4];
+        h.YLim = [0,180];
 end
-
+        h.Box = 'on';
 
 set(hsf,'EdgeColor','none')
 view(h,2)
