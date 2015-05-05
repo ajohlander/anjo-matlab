@@ -25,7 +25,7 @@ if(nargin < 4)
 end
 
 if(nargin <= 2) % B-field input!
-    if(nargin == 1) 
+    if(nargin == 1)
         AX = anjo.afigure(1);
         bField = x1;
         
@@ -57,9 +57,11 @@ switch plotMode
     case '3d'
         legStr = {'B_{x}','B_{y}','B_{z}'};
     case 'abs'
-        scColor = anjo.get_cluster_colors();
-        set(AX,'ColorOrder',[scColor{scInd}])
-        %No legend
+        if(nargin > 2)
+            scColor = anjo.get_cluster_colors();
+            set(AX,'ColorOrder',[scColor{scInd}])
+            %No legend
+        end
 end
 
 hideXLabel = isequal(get(AX,'XTickLabel'),[]);
