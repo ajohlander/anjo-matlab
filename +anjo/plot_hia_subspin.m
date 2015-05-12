@@ -15,16 +15,26 @@ function [hsf,ionMat,t] = plot_hia_subspin(h,tint,scInd,plotMode,colLim)
 
 tintData = [tint(1)-12,tint(2)+12];
 [ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode);
+%ionMat(ionMat == 0) = min(min(ionMat(ionMat ~= 0)));
 [th,~,etab] = anjo.get_hia_values('all');
 
 hideXLabel = isequal(get(h,'XTickLabel'),[]);
 
 
+
+fPar = h.Parent;
+if(~isfield(fPar.UserData,'t_start_epoch'))
+    fPar.UserData.t_start_epoch = tint(1);
+end
+
+
+t_start = fPar.UserData.t_start_epoch;
+t = t-t_start;
 switch plotMode
     case 'energy'
         hsf = surf(h,t,(etab),log10(ionMat'));
         %ylim(h,[0,max(log10(etab))])
-        labStr = '$\log{E}$ [eV]';
+        labStr = 'Energy [eV]';
         h.YScale = 'log';
         h.YTick = [1e1, 1e2, 1e3, 1e4];
         h.Box = 'on';
@@ -40,7 +50,10 @@ end
 
 set(hsf,'EdgeColor','none')
 view(h,2)
-xlim(h,tint)
+%xlim(h,tint)
+irf_zoom(h,'x',tint)
+h.UserData.t_start_epoch = tint(1);
+
 %caxis(colLim)
 anjo.label(h,labStr)
 legStr = ['C',num2str(scInd),'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];

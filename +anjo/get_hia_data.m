@@ -26,6 +26,7 @@ ion3d = local.c_read(dataStr,tint);
 ionArray = double(ion3d{2});
 tArray = double(ion3d{1});
 
+th = anjo.get_hia_values('theta');
 
 if(nargin == 3)
     if(nargin == 3 && strcmp(dataMode,'default'))
@@ -35,7 +36,8 @@ if(nargin == 3)
         
     elseif(strcmp(dataMode,'energy'))
         % sum over polar angle
-        ionArray = squeeze(sum(ionArray,2));
+%         ionArray = squeeze(sum(ionArray,2));
+        ionArray = hia_sum_over_pol(ionArray);
         tNum = size(ionArray,1);
         ionMat = zeros(tNum*16,31);
         t = zeros(1,tNum*16);
