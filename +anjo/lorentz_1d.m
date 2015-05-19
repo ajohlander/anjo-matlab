@@ -1,4 +1,4 @@
-function [vel, xMin, Y] = lorentz_1d(eF,bF,v0,runTime)%,dT,nSlams)
+function [vel, xMin, Y] = lorentz_1d(eF,bF,v0,runTime,x0)%,dT,nSlams)
 %ANJO.LORENTZ_1D performs a 1D test patrticle simulation
 %   ANJO.LORENTZ_1D(eF,bF,v0,runTime) runs a 1D simulation for a particle
 %   with initial velocity v0 in fields eF and bF. The simulation ends after
@@ -9,6 +9,10 @@ function [vel, xMin, Y] = lorentz_1d(eF,bF,v0,runTime)%,dT,nSlams)
 %   value for the particle position acheived during the simulation.
 %   [vel,xMin,Y] = ANJO.LORENTZ_1D(eF,bF,v0,runTime) also returns the full
 %   simulation matrix Y = [x,y,z,vx,vy,vz].
+
+if(nargin==4)
+    x0 = -1e9;
+end
 
 set_global_E_B(eF,bF);
 
@@ -24,6 +28,9 @@ else
     x = xie;
 end
 
+if(x0 > -1e8)
+    x = x0;
+end
 
 y0 = [x,0,0,v0];
 
