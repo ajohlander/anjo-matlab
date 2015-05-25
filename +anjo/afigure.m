@@ -1,15 +1,19 @@
 function [h,f] = afigure(subNum,figSize)
-%ANJO.AFIGURE Quick way to call irf_plot
-%   ANJO.AFIGURE(subNum) initiates figure with number of panels subNum. Size of
-%   figure is set to 10x7 cm.
+%ANJO.AFIGURE Quick way to call irf_plot.
+%
+%   ANJO.AFIGURE(subNum) initiates figure with number of panels subNum.
+%   Size of figure is set to 10x7 cm.
+%
 %   ANJO.AFIGURE(subNum,figSize) declare size of figure with a vector
 %   figSize = [width, height] in centimeters.
 %   h = ANJO.AFIGURE(...) returns vector of axes for the panels h
+%
 %   [h,f] = ANJO.AFIGURE(...) also returns figure f.
 %
 %   See also: IRF_PLOT
 
 
+%% Input
 if(nargin == 1)
     figSize = [10,7];
 elseif(nargin == 0)
@@ -17,6 +21,7 @@ elseif(nargin == 0)
     subNum = 1;
 end
 
+%% Initiate figures
 if(anjo.is_new_matlab()) % Awesome new code
     
     % Initiate figure
@@ -33,7 +38,11 @@ if(anjo.is_new_matlab()) % Awesome new code
     
     for i = 1:subNum
         if(i ~= subNum)
+            h(i).UserData.ShowXLabel = 'off';
             h(i).XTickLabel = '';
+            h(i).XLabel.String = '';
+        else
+            h(i).UserData.ShowXLabel = 'on';
         end
     end
     
