@@ -19,6 +19,7 @@
 %   get_one_hia_spin    - Get ion data for one full spin of CIS-HIA.
 %   get_part_spin       - Get a partial spin
 %   gradient_line       - Plots a 2D line with a color gradient.
+%   hia_sum_over_pol    - Sums a 4D ion HIA matrix over the polar angle.
 %   hodo                - Plots B-field in hodograms in an LMN frame.
 %   hodo_gui            - GUI for creating hodograms.
 %   import_c_data       - Downloads data from CSA, stores it in ~/Data/caalocal.
@@ -34,5 +35,6 @@
 %   print_fig           - Exports figure to file.
 %   progress_pie        - Pie chart showing progress of a calculation
 %   reflect_vector      - Mirrors a velocity vector on a moving plane.
+%   sc_azimuth          - Transforms plasma azimuthal angle to s/c azimuthal angle.
 %   sph2car             - Transforms coordinates from spherical to cartesian
 %   transform_e_field   - Transforms electric field to another inertial frame
