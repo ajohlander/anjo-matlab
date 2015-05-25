@@ -37,6 +37,7 @@ switch plotMode
         hsf = irf_spectrogram(AX,P);
         labStr = 'Energy [eV]';
         AX.YScale = 'log';
+        AX.YTick = 10.^[1,2,3,4];
     case 'polar'
         P.f = th;
         hsf = irf_spectrogram(AX,P);
