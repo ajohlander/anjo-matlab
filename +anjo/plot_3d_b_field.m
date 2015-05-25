@@ -64,9 +64,7 @@ switch plotMode
         end
 end
 
-hideXLabel = isequal(get(AX,'XTickLabel'),[]);
 irf_plot(AX,bField);
-
 
 if(strcmp(plotMode,'abs'))
     % No legend
@@ -75,15 +73,17 @@ else
     irf_legend(AX,legStr,legLD);
 end
 
-
 anjo.label(AX,'$B$ [nT]')
 
 irf_zoom(AX,'x',tint)
 
-
-if(hideXLabel)
-    set(AX,'XTickLabel',[])
+if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+    AX.XTickLabel = '';
+    AX.XLabel.String = '';
+else
+    irf_timeaxis(AX)
 end
+
 
 if(nargout == 1)
     out = bField;

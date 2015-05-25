@@ -27,7 +27,6 @@ else % three inputs
     eField = anjo.get_3d_e_field(tint,scInd);
 end
 
-hideXLabel = isequal(get(AX,'XTickLabel'),[]);
 irf_plot(AX,eField);
 
 legLD = [0.02,0.06];
@@ -37,9 +36,13 @@ anjo.label(AX,'$E$ [mVm$^{-1}$]')
 
 irf_zoom(AX,'x',tint)
 
-if(hideXLabel)
-    set(AX,'XTickLabel',[])
+if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+    AX.XTickLabel = '';
+    AX.XLabel.String = '';
+else
+    irf_timeaxis(AX)
 end
+
 
 if(nargout == 1)
     out = eField;

@@ -17,8 +17,6 @@ tintData = [tint(1)-12,tint(2)+12];
 [ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode);
 [th,~,etab] = anjo.get_hia_values('all');
 
-hideXLabel = isequal(get(AX,'XTickLabel'),[]);
-
 
 
 fPar = AX.Parent;
@@ -52,8 +50,9 @@ legStr = ['C',num2str(scInd)];%,'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];
 hleg = irf_legend(AX,{legStr},[0.98,0.95]);
 hleg.Color = 'w';
 
-if(hideXLabel)
-    set(AX,'XTickLabel',[])
+if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+    AX.XTickLabel = '';
+    AX.XLabel.String = '';
 else
     irf_timeaxis(AX)
 end
