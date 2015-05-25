@@ -32,7 +32,8 @@ P.t = t;
 
 switch plotMode
     case 'energy'
-        P.f = etab;
+        P.f = etab*1e3; % factor 1000 because irf_spectrogram believes 
+                        % input is kHz.
         hsf = irf_spectrogram(AX,P);
         labStr = 'Energy [eV]';
         AX.YScale = 'log';
@@ -41,8 +42,6 @@ switch plotMode
         hsf = irf_spectrogram(AX,P);
 
         labStr = '$\theta$ [deg]';
-        %h.YTick = [1e1, 1e2, 1e3, 1e4];
-        %h.YLim = [0,180];
 end
 
 irf_zoom(AX,'x',tint)
@@ -50,7 +49,7 @@ irf_zoom(AX,'x',tint)
 anjo.label(AX,labStr)
 legStr = ['C',num2str(scInd)];%,'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];
 hleg = irf_legend(AX,{legStr},[0.98,0.95]);
-hleg.Color = 'y';
+hleg.Color = 'w';
 
 if(hideXLabel)
     set(AX,'XTickLabel',[])
