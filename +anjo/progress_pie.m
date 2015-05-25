@@ -81,11 +81,10 @@ end
 
 
 
-function [h] = print_text(i,n)
+function [] = print_text(i,n)
 % 
 prcent = floor(i/n*100);
 progText = ['Progress: ',num2str(prcent),'%'];
 disp(progText)
 
 end
-
