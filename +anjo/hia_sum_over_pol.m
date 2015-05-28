@@ -8,15 +8,27 @@ function [ionMat] = hia_sum_over_pol(ion4d)
 %   See also:   ANJO.GET_HIA_DATA
 %
 
-tNum = size(ion4d,1);
-ionMat = zeros(tNum,16,31);
+if(length(size(ion4d)) == 4)
+    tNum = size(ion4d,1);
+    phiN = 16;
+    d4 = 1;
+else
+    tNum = 1;
+    phiN = size(ion4d,2);
+    d4 = 0;
+end
+ionMat = zeros(tNum,phiN,31);
 th = anjo.get_hia_values('theta')';
 
 for i = 1:tNum
     for j = 1:8
-        for k = 1:16
+        for k = 1:phiN
             for l = 1:31
-                ionMat(i,k,l) = ionMat(i,k,l)+ion4d(i,j,k,l)*sind(th(j));
+                if d4
+                    ionMat(i,k,l) = ionMat(i,k,l)+ion4d(i,j,k,l)*sind(th(j));
+                else
+                    ionMat(i,k,l) = ionMat(i,k,l)+ion4d(j,k,l)*sind(th(j));
+                end
             end
         end
     end
