@@ -4,8 +4,13 @@ function [cmap] = cmap(varargin)
 %   c = ANJO.CMAP Returns custom colormap that goes from light to dark.
 %   Similar to irfu "standard" but with more yellow.
 %   
+%   c = ANJO.CMAP(colorMapName) Returns special colormap.
+%
 %   c = ANJO.CMAP(color) Returns monochromatic colormap from white to
 %   black with specified color.
+%
+%   Colormap Names:
+%       'anjo'  -   orange and blue
 %   
 %   Colors:
 %       'red'
@@ -38,6 +43,12 @@ switch lower(cMapMode) % Special colormaps
             255,255,000;...
             255,000,000;...
             000,000,255]/255;
+        
+    case 'anjo'
+        c = [1,1,1;...
+            1,0.7,0;...
+            0,0,0.8;...
+            0,0,0];
         
     otherwise % Single color
 
