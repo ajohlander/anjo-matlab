@@ -58,8 +58,8 @@ switch plotMode
         legStr = {'B_{x}','B_{y}','B_{z}'};
     case 'abs'
         if(nargin > 2)
-            scColor = anjo.get_cluster_colors();
-            set(AX,'ColorOrder',[scColor{scInd}])
+            scColor = anjo.get_cluster_colors(scInd);
+            set(AX,'ColorOrder',scColor)
             %No legend
         end
 end
