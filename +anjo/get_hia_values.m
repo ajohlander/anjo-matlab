@@ -8,6 +8,7 @@ function [x1,x2,x3] = get_hia_values(value)
 %       'theta' - returns polar angle in degrees.
 %       'phi'   - returns azimuthal angle in degrees.
 %       'etab'  - returns energy values in eV.
+%       'half'  - returns energy with half resolution
 %
 
 if nargin == 0
@@ -24,6 +25,11 @@ elseif(strcmp(value,'phi'))
     x1 = get_phi();
 elseif(strcmp(value,'etab'))
     x1 = get_e_tab();
+elseif(strcmp(value,'half'))
+    % Hack so that it is not nececcary to define half energy twice.
+    e0 = get_e_tab();
+    f0 = zeros(1,1,31);
+    [~,x1] = anjo.hia_recalc_psd(f0,e0); 
 end
 
 end

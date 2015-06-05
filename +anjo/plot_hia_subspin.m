@@ -1,4 +1,4 @@
-function [hsf,ionMat,t] = plot_hia_subspin(AX,tint,scInd,plotMode,colLim)
+function [hsf,ionMat,t] = plot_hia_subspin(AX,tint,scInd,plotMode,enMode,colLim)
 %ANJO.PLOT_HIA_SUBSPIN plots data from HIA in phase space density [s^3km^-6].
 %   [hsf,ionMat,t] = ANJO.PLOT_HIA_SUBSPIN(AX,tint,scInd,mode,colLim) plots
 %   HIA data in phase space density. Returns data in ionMat and time vector
@@ -13,11 +13,21 @@ function [hsf,ionMat,t] = plot_hia_subspin(AX,tint,scInd,plotMode,colLim)
 %
 %   ONLY WORKS FOR SUBSPIN DATA
 
+
+if(nargin<5)
+    enMode = 'full';
+end
+if(nargin<6)
+    colLim = [2,10];
+end
+
+
 tintData = [tint(1)-12,tint(2)+12];
-[ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode);
+[ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode,enMode);
 [th,~,etab] = anjo.get_hia_values('all');
-
-
+if(strcmp(enMode,'half'))
+    etab = anjo.get_hia_values('half');
+end
 
 fPar = AX.Parent;
 if(~isfield(fPar.UserData,'t_start_epoch'))
