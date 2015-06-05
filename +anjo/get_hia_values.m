@@ -31,7 +31,7 @@ end
 function th = get_theta()
     th = [-78.750, -56.250, -33.750, -11.250, 11.250, 33.750,...
         56.250,78.750];
-    th = 90-th;
+    %th = 90-th;
 
 end
 
@@ -40,11 +40,11 @@ function phi = get_phi()
         -45.417 -67.917 -90.417 -112.917 -135.417 -157.917 179.583 ...
         157.083];
 
-    for i = 1:length(phi)
-        if(phi(i)<0)
-            phi(i) = 360+phi(i);
-        end
-    end
+%     for i = 1:length(phi)
+%         if(phi(i)<0)
+%             phi(i) = 360+phi(i);
+%         end
+%     end
 end
 
 function eTab = get_e_tab()
