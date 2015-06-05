@@ -46,9 +46,9 @@ end
 irf_zoom(AX,'x',tint)
 
 anjo.label(AX,labStr)
-legStr = ['C',num2str(scInd)];%,'\_CP\_CIS-HIA\_HS\_MAG\_IONS\_PSD'];
+legStr = ['C',num2str(scInd)];
 hleg = irf_legend(AX,{legStr},[0.98,0.95]);
-hleg.Color = 'w';
+hleg.Color = 'k';
 
 if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
     AX.XTickLabel = '';
