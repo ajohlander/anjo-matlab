@@ -1,7 +1,7 @@
-function [] = plot_sim_vel(h,vFinal,component,plotMode)
+function [] = plot_sim_vel(AX,vFinal,component,plotMode)
 %ANJO.PLOT_SIM_VEL plots final velocity vs initial velocity
-%   ANJO.PLOT_SIM_VEL(h,vFinal,component,plotMode) plots final velocity over initial
-%   velocity for axis handle h. Data in matrix vFinal.
+%   ANJO.PLOT_SIM_VEL(AX,vFinal,component,plotMode) plots final velocity over initial
+%   velocity for axis handle AX. Data in matrix vFinal.
 %
 %   component:
 %       '3d'    - all components, default
@@ -14,43 +14,37 @@ function [] = plot_sim_vel(h,vFinal,component,plotMode)
 %
 %   TODO: flags
 
-hideXLabel = isequal(get(h,'XTickLabel'),[]);
 
 if(nargin < 4)
-    component = '3d';
-end
-if(nargin < 3)
     plotMode = 'line';
 end
-
+if(nargin < 3)
+    component = '3d';
+end
 
 switch component
     case '3d'
         vf = vFinal/1e3;
-        anjo.label(h,'y','$v_{f}$ [kms$^{-1}$]')
-        irf_legend(h,{'v_x','v_y','v_z'},[0.95,0.05])
+        irf_legend(AX,{'v_x','v_y','v_z'},[0.95,0.05])
     case 'x'
         vf = vFinal(:,1:2)/1e3;
-        anjo.label(h,'y','$v_{x,f}$ [kms$^{-1}$]')
 end
 
 switch plotMode
     case 'line'
-        irf_plot(h,vf)
+        irf_plot(AX,vf)
     case 'scatter'
-        scatter(h,vf(:,1),vf(:,2))
-end
-        
-
-
-
-
-if(hideXLabel)
-    set(h,'XTickLabel',[])
-else
-    anjo.label(h,'x','$v_i$ [kms$^{-1}$]')
+        scatter(AX,vf(:,1),vf(:,2))
 end
 
-h.Box = 'on';
+anjo.label(AX,'x','$v_{i}$ [kms$^{-1}$]')
+anjo.label(AX,'y','$v_{f}$ [kms$^{-1}$]')
+
+if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+    AX.XTickLabel = '';
+    AX.XLabel.String = '';
+end
+
+AX.Box = 'on';
 
 end
