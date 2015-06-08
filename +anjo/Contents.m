@@ -3,6 +3,7 @@
 % Files
 %   afigure             - Quick way to call irf_plot
 %   car2sph             - Transforms coordinates from cartesian to spherical
+%   cmap                - Custom colormap.
 %   compress_field      - Compresses 3D E- or B-field 
 %   e_jxb               - Calculates E = jxB/ne. 
 %   e_vxb               - Calculates E = jxB/ne. 
@@ -19,6 +20,7 @@
 %   get_one_hia_spin    - Get ion data for one full spin of CIS-HIA.
 %   get_part_spin       - Get a partial spin
 %   gradient_line       - Plots a 2D line with a color gradient.
+%   hia_recalc_psd      - Recalculates PSD from 31 to 16 energy bins.
 %   hia_sum_over_pol    - Sums a 4D ion HIA matrix over the polar angle.
 %   hodo                - Plots B-field in hodograms in an LMN frame.
 %   hodo_gui            - GUI for creating hodograms.
