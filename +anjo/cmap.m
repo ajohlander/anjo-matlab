@@ -10,7 +10,8 @@ function [cmap] = cmap(varargin)
 %   black with specified color.
 %
 %   Colormap Names:
-%       'anjo'  -   orange and blue
+%       'standard'  -   similar to irf_colormap
+%       'anjo'      -   orange and blue
 %   
 %   Colors:
 %       'red'
