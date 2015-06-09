@@ -34,7 +34,7 @@ switch plotMode
     case 'line'
         irf_plot(AX,vf)
     case 'scatter'
-        scatter(AX,vf(:,1),vf(:,2))
+        scatter(AX,vf(:,1),vf(:,2),'.')
 end
 
 anjo.label(AX,'x','$v_{i}$ [kms$^{-1}$]')
