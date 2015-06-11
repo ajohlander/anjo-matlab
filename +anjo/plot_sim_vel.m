@@ -1,4 +1,4 @@
-function [] = plot_sim_vel(AX,vFinal,component,plotMode)
+function [] = plot_sim_vel(AX,vFinal,varargin)
 %ANJO.PLOT_SIM_VEL plots final velocity vs initial velocity
 %   ANJO.PLOT_SIM_VEL(AX,vFinal,component,plotMode) plots final velocity over initial
 %   velocity for axis handle AX. Data in matrix vFinal.
@@ -11,16 +11,14 @@ function [] = plot_sim_vel(AX,vFinal,component,plotMode)
 %       'scatter'
 %
 %   See also:   ANJO.LORENTZ_1D
-%
-%   TODO: flags
 
 
-if(nargin < 4)
-    plotMode = 'line';
-end
-if(nargin < 3)
-    component = '3d';
-end
+% Possible pararmeters, default is the first element.
+possComp = {'3d','x'};
+possMode = {'line','scatter'};
+
+% Get parameters, deafult if not set.
+[component,plotMode] = anjo.incheck(varargin,possComp,possMode);
 
 switch component
     case '3d'

@@ -1,4 +1,4 @@
-function [F_2d] = hia_sum_over_pol(F_3d)
+function [F_2d] = hia_sum_over_pol(F_3d,varargin)
 %ANJO.HIA_SUM_OVER_POL Sums a 4D ion HIA matrix over the polar angle.
 %
 %   ionMat = ANJO.HIA_SUM_OVER_POL(ion4d) Given F_3d of size 8x16Nx31,
@@ -10,13 +10,23 @@ function [F_2d] = hia_sum_over_pol(F_3d)
 %   See also:   ANJO.GET_HIA_DATA
 %
 
+pm1 = {'full','sw'};
+thMode = anjo.incheck(varargin,pm1);
+
 tn = size(F_3d,2); % Number of time steps
 en = size(F_3d,3); % Number of energy bins
+
+switch thMode
+    case pm1{1} % full
+        thRange = 1:8;
+    case pm1{2} % sw
+        thRange = 4:5;
+end
 
 F_2d = zeros(tn,en);
 th = anjo.get_hia_values('theta')'; % Equatorial angle
 
-for i = 1:8
+for i = thRange
     for j = 1:tn
         for k = 1:en
             fval = F_3d(i,j,k)*cosd(th(i));
