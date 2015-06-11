@@ -31,7 +31,7 @@ pEn = {'full','half'};  % energy modes
 [dataMode,enMode] = anjo.incheck(varargin,pDa,pEn);
 
 ion3d = local.c_read(dataStr,tint);
-F_4d = (ion3d{2});
+F_4d = double(ion3d{2});
 tArray = (ion3d{1});
 
 if(nargin >= 3)
