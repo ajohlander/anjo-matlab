@@ -1,4 +1,4 @@
-function [F,t] = get_hia_data(tint,scInd,dataMode,enMode)
+function [F,t] = get_hia_data(tint,scInd,varargin)
 %ANJO.GET_HIA_DATA returns data from HIA in phase space density [s^3km^-6].
 %   [ionMat,t] = ANJO.GET_HIA_DATA(tint,scInd,dataMode) returns data in
 %   matrix ionMat and time vector t. tint is the time interval for the
@@ -26,6 +26,10 @@ else
     return;
 end
 
+pDa = {'default','3d','energy','polar','1d'}; % data modes
+pEn = {'full','half'};  % energy modes
+[dataMode,enMode] = anjo.incheck(varargin,pDa,pEn);
+
 ion3d = local.c_read(dataStr,tint);
 F_4d = (ion3d{2});
 tArray = (ion3d{1});
@@ -38,23 +42,23 @@ if(nargin >= 3)
         
     else
         [t,F_3d] = hia_sum_over_spin(tArray,F_4d);
-        if(nargin == 4 && strcmp(enMode,'half'))
+        if(nargin == 4 && strcmp(enMode,pEn{2}))
             F_3d = anjo.hia_recalc_psd(F_3d);
         end
             
-        if(strcmp(dataMode,'energy'))
+        if(strcmp(dataMode,pDa{3}))
             % sum over polar angle
             F_2d = anjo.hia_sum_over_pol(F_3d);
             F = F_2d;
             
-        elseif(strcmp(dataMode,'polar'))
+        elseif(strcmp(dataMode,pDa{4}))
             % sum over energy
             F_2d = hia_sum_over_energy(F_3d);
             F = F_2d;
             
-        elseif(strcmp(dataMode,'3d'))
+        elseif(strcmp(dataMode,pDa{2}))
             F = F_3d;
-        elseif(strcmp(dataMode,'1d'))
+        elseif(strcmp(dataMode,pDa{5}))
             F_2d = anjo.hia_sum_over_pol(F_3d);
             F_1d = hia_sum_over_az(F_2d);
             F = F_1d;
