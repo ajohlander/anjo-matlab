@@ -22,51 +22,25 @@ elseif(nargin == 0)
 end
 
 %% Initiate figures
-if(anjo.is_new_matlab()) % Awesome new code
-    
-    % Initiate figure
-    h = irf_plot(subNum,'newfigure');
-    f = h.Parent;
-    
-    % Set parameters
-    f.PaperUnits = 'centimeters';
-    xSize = figSize(1); ySize = figSize(2);
-    xLeft = (21-xSize)/2; yTop = (30-ySize)/2;
-    f.PaperPosition = [xLeft yTop xSize ySize];
-    f.Position = [10 10 xSize*50 ySize*50];
-    f.PaperPositionMode = 'auto';
-    
-    for i = 1:subNum
-        if(i ~= subNum)
-            h(i).UserData.ShowXLabel = 'off';
-            h(i).XTickLabel = '';
-            h(i).XLabel.String = '';
-        else
-            h(i).UserData.ShowXLabel = 'on';
-        end
-    end
-    
-else
-    
-    %Initiate figure
-    irf_plot(subNum,'newfigure');
-    set(gcf,'PaperUnits','centimeters')
-    xSize = figSize(1); ySize = figSize(2);
-    xLeft = (21-xSize)/2; yTop = (30-ySize)/2;
-    set(gcf,'PaperPosition',[xLeft yTop xSize ySize])
-    set(gcf,'Position',[10 10 xSize*50 ySize*50])
-    set(gcf,'paperpositionmode','auto') % to get the same printing as on screen
-    
-    
-    h = zeros(1,subNum);
-    for i = 1:subNum
-        h(i) = irf_panel(num2str(i));
-        if(i ~= subNum)
-            set(h(i),'XTickLabel',[])
-        end
-    end
-    f = get(h(1),'Parent');
-end
+% Initiate figure
+h = irf_plot(subNum,'newfigure');
+f = h.Parent;
 
+% Set parameters
+f.PaperUnits = 'centimeters';
+xSize = figSize(1); ySize = figSize(2);
+xLeft = (21-xSize)/2; yTop = (30-ySize)/2;
+f.PaperPosition = [xLeft yTop xSize ySize];
+f.Position = [10 10 xSize*50 ySize*50];
+f.PaperPositionMode = 'auto';
+
+for i = 1:subNum
+    if(i ~= subNum)
+        h(i).UserData.ShowXLabel = 'off';
+        h(i).XTickLabel = '';
+        h(i).XLabel.String = '';
+    else
+        h(i).UserData.ShowXLabel = 'on';
+    end
 end
 
