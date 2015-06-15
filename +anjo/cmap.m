@@ -12,6 +12,7 @@ function [cmap] = cmap(varargin)
 %   Colormap Names:
 %       'standard'  -   similar to irf_colormap
 %       'anjo'      -   orange and blue
+%       'speedway'  -   white-yellow-red-blue
 %   
 %   Colors:
 %       'red'
@@ -26,17 +27,16 @@ function [cmap] = cmap(varargin)
 %
 %   See also: IRF_COLORMAP
 
-
+%% Input
 if(nargin == 0)
     cMapMode = 'standard';
 else
     cMapMode = varargin{1};
 end
     
-
+%% Set which colors
 switch lower(cMapMode) % Special colormaps
     case 'standard'
-        
         c = [255,255,255;...
             043,255,255;...
             000,255,000;...
@@ -50,6 +50,11 @@ switch lower(cMapMode) % Special colormaps
             1,0.7,0;...
             0,0,0.8;...
             0,0,0];
+    case 'speedway'
+        c = [255,255,255;...
+            255,255,000;...
+            255,000,000;...
+            000,000,200]/255;
         
     otherwise % Single color
 
@@ -78,6 +83,7 @@ switch lower(cMapMode) % Special colormaps
         
 end
 
+%% Create colormap
 cN = size(c,1);
 x = linspace(1,64,cN);
 cmap = zeros(64,3);
