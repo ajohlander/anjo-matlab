@@ -26,7 +26,6 @@
 %   hodo_gui            - GUI for creating hodograms.
 %   import_c_data       - Downloads data from CSA, stores it in ~/Data/caalocal.
 %   intersect_line_data - Finds intersection between a line and data points
-%   is_new_matlab       - Checks if new plot system is to be used
 %   label               - Adds label to axis.
 %   lorentz_1d          - Performs a 1D test patrticle simulation
 %   plot_3d_b_field     - Plot 3D FGM data in GSE.
