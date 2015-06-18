@@ -1,4 +1,4 @@
-% Version 0.00 28-Apr-2015
+% Version 0.10 18-Jun-2015
 %
 % Files
 %   afigure             - Quick way to call irf_plot
@@ -25,6 +25,7 @@
 %   hodo                - Plots B-field in hodograms in an LMN frame.
 %   hodo_gui            - GUI for creating hodograms.
 %   import_c_data       - Downloads data from CSA, stores it in ~/Data/caalocal.
+%   incheck             - Matches inputs to parameters.
 %   intersect_line_data - Finds intersection between a line and data points
 %   label               - Adds label to axis.
 %   lorentz_1d          - Performs a 1D test patrticle simulation
