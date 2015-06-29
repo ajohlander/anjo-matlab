@@ -39,7 +39,7 @@ axPos(2) = D;
 AX.Position = axPos;
 
 hxl = AX.XLabel;
-hxl.Position
+%hxl.Position
 
 if(nargout == 1)
     out = hxl;
