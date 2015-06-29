@@ -23,6 +23,7 @@ end
 
 %% Initiate figures
 % Initiate figure
+irf.log('w','Initiating new figure')
 h = irf_plot(subNum,'newfigure');
 f = h.Parent;
 
@@ -43,4 +44,12 @@ for i = 1:subNum
         h(i).UserData.ShowXLabel = 'on';
     end
 end
+
+%% Create dropdown menu option
+anjo.figmenu(f)
+
+
+
+
+
 

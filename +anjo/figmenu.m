@@ -1,0 +1,59 @@
+function [varargout] = figmenu(f)
+%ANJO.FIGMENU Helpful menu items.
+%
+%   ANJO.FIGMENU(f) Creates an option "anjo" in the irf figure menu.
+%
+%   mh = ANJO.FIGMENU Also returns handle to the uimenu.
+
+%% Get the IRF menu handle
+if(nargin == 0)
+    f = gcf;
+end
+
+irf.log('w',['Creating dropdown menu for figure ',num2str(f.Number)])
+
+% Initiate IRF figmenu
+irf_figmenu
+
+% Get the menu handle
+mirf = findall(f.Children,'Type','uimenu','Label','&irf');
+
+%% Create menu items
+mh = uimenu(mirf,'Label','&anjo');
+mh.Separator = 'on';
+menuLabels = {'Print as...','Fix x-label'};
+
+nl = length(menuLabels);
+m2h = gobjects(1,nl);
+
+for i = 1:nl
+    m2h(i) = uimenu(mh,'Label',menuLabels{i});
+end
+
+
+%% Create individual submenus and irf commands
+
+% 1 - printing
+ftype = {'eps','pdf','png'};
+
+m13h = gobjects(1,3);
+for i = 1:3
+    m13h(i) = uimenu(m2h(1),'Label',ftype{i});
+end
+% Callbacks
+m13h(1).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''eps'')';
+m13h(2).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''pdf'')';
+m13h(3).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''png'')';
+
+if(nargout==1)
+    varargout{1} = mh;
+end
+
+
+% 2 - fix x-label
+m2h(2).Callback = 'anjo.fix_x_label';
+
+
+end
+
+
