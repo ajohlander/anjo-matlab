@@ -36,7 +36,7 @@ anjo.label(AX,'$E$ [mVm$^{-1}$]')
 
 irf_zoom(AX,'x',tint)
 
-if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+if(isfield(AX.UserData.XLabel,'Visible') && strcmp(AX.UserData.XLabel.Visible,'off'))
     AX.XTickLabel = '';
     AX.XLabel.String = '';
 else

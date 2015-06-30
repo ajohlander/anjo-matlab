@@ -65,7 +65,7 @@ legStr = ['C',num2str(scInd)];
 hleg = irf_legend(AX,{legStr},[0.98,0.95]);
 hleg.Color = 'k';
 
-if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+if(isfield(AX.UserData.XLabel,'Visible') && strcmp(AX.UserData.XLabel.Visible,'off'))
     AX.XTickLabel = '';
     AX.XLabel.String = '';
 else

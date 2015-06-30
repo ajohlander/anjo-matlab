@@ -38,7 +38,7 @@ end
 anjo.label(AX,'x','$v_{i}$ [kms$^{-1}$]')
 anjo.label(AX,'y','$v_{f}$ [kms$^{-1}$]')
 
-if(isfield(AX.UserData,'ShowXLabel') && strcmp(AX.UserData.ShowXLabel,'off'))
+if(isfield(AX.UserData.XLabel,'Visible') && strcmp(AX.UserData.XLabel.Visible,'off'))
     AX.XTickLabel = '';
     AX.XLabel.String = '';
 end
