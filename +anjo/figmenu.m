@@ -21,7 +21,7 @@ mirf = findall(f.Children,'Type','uimenu','Label','&irf');
 %% Create menu items
 mh = uimenu(mirf,'Label','&anjo');
 mh.Separator = 'on';
-menuLabels = {'Print as...','Fix x-label'};
+menuLabels = {'Print as...','Fix axes position','Remove time axis'};
 
 nl = length(menuLabels);
 m2h = gobjects(1,nl);
@@ -52,6 +52,17 @@ end
 
 % 2 - fix x-label
 m2h(2).Callback = 'anjo.fix_x_label';
+
+
+% 3 - remove time axis
+cmd3 = ['tempFIG=gcf;',...
+    'tempAXar = findall(tempFIG.Children,''Type'',''Axes'');',...
+    'tempAX = tempAXar(1);',...
+    'tempAX.XLabel.String = tempAX.UserData.XLabel.String;',...
+    'tempAX.XTickLabelMode = ''auto'';',...
+    'tempAX.XTickMode = ''auto'';'];
+m2h(3).Callback = cmd3;
+
 
 
 end

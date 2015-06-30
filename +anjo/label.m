@@ -37,6 +37,7 @@ end
 switch axis
     case 'x'
         hLabel = AX.XLabel;
+        AX.UserData.XLabel.String = textStr;
     case 'y'
         hLabel = AX.YLabel;
     case 'z'

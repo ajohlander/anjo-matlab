@@ -36,12 +36,13 @@ f.Position = [10 10 xSize*50 ySize*50];
 f.PaperPositionMode = 'auto';
 
 for i = 1:subNum
+    h(i).UserData.XLabel.String = h(i).XLabel.String; % Stores XLabel for restoration
     if(i ~= subNum)
-        h(i).UserData.ShowXLabel = 'off';
+        h(i).UserData.XLabel.Visible = 'off';
         h(i).XTickLabel = '';
         h(i).XLabel.String = '';
     else
-        h(i).UserData.ShowXLabel = 'on';
+        h(i).UserData.XLabel.Visible = 'on';
     end
 end
 
