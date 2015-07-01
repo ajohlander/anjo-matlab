@@ -53,6 +53,11 @@ elseif(nargin == 3)     % number/handle, name and type
     fileType = x3;
 end
 
+if(strcmp(fileName,'')) % Do not print if name is empty
+    irf.log('w','No file name given, will not print')
+    return
+end
+
 %% File flags 
 switch fileType
     case 'eps'
@@ -82,10 +87,12 @@ if(handleInput)
 elseif(figNum == 0) %never assigned
     irf.log('warning','printing current figure')
     f = gcf;
+    figNum = f.Number;
 else
-    irf.log('warning',['printing figure ',num2str(figNum)])
     f = figure(figNum);
 end
+irf.log('warning',['printing figure ',num2str(figNum)])
+irf.log('warning',['saving as: ',fileName,'.', fileType])
 
 %% Exporting figure
 fileStr = [fileName,'.',fileType];
