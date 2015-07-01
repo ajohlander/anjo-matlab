@@ -1,7 +1,11 @@
 function [varargout] = anjo(varargin)
 %ANJO General info
 %   
-%   ANJO('path') Returns path to repo.
+%   ANJO('check') Checks versions of anjo-matlab and irf-matlab.
+%
+%   ANJO('help') Same as help anjo.
+%
+%   ANJO('path') Returns or prints path to repo.
 %
 %   ANJO('ver') Returns version of repo.
 %
