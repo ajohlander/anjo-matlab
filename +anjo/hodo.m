@@ -7,10 +7,9 @@ function [y1,y2] = hodo(varargin)
 %   
 %   [h,v] = ANJO.HODO(B) also returns column vector with LMN eigenvectors v.
 %   
-%   See also: ANJO.HODO_GUI
+%   See also: ANJO.HODO_GUI, ANJO.LINEARROW
 %
-%   TODO:
-%       Arrows in plot?
+
 
 %% Input
 
@@ -47,14 +46,17 @@ end
 % First panel N-L
 plot(h(1),Blmn(:,4),Blmn(:,2),'k-')
 plot(h(1),Blmn(1,4),Blmn(1,2),'r*','MarkerSize',3)
+anjo.linearrow(h(1),Blmn(:,4),Blmn(:,2),10);
 
 % Second panel M-L
 plot(h(2),Blmn(:,3),Blmn(:,2))
 plot(h(2),Blmn(1,3),Blmn(1,2),'r*','MarkerSize',3)
+anjo.linearrow(h(2),Blmn(:,3),Blmn(:,2),10);
 
 % Thrid panel M-N
 plot(h(3),Blmn(:,4),Blmn(:,3))
 plot(h(3),Blmn(1,4),Blmn(1,3),'r*','MarkerSize',3)
+anjo.linearrow(h(3),Blmn(:,4),Blmn(:,3),10);
 
 % Dashed line for Bn = 0
 
@@ -115,7 +117,8 @@ anjo.label(h(3),'x','$B_{N}$')
 anjo.label(h(3),'y','$B_{M}$')
 
 %% Legend
-%Assuming h(3) is current axes
+%setting h(3) to current axes
+axis(h(3));
 
 % text position
 tPos = [1.2875,0.58,0];
