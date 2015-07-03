@@ -11,6 +11,9 @@ function [q] = triangle(AX,varargin)
 %
 %   ANJO.TRIANGLE(x,y,angle,s) Specifies the size of the triangles, trial
 %   and error is probably required.
+%
+%   See also: ANJO.LINEARROW, ANJO.MARKER
+
 
 %% input
 s = 'auto';
