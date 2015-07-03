@@ -31,6 +31,15 @@ if(nargin >= 2+hInp)
     end
 end
 
+% If column vector, transpose
+if(iscolumn(x))
+    x = x';
+end
+
+if(iscolumn(y))
+    y = y';
+end 
+
 %% Get position and angles for the arrows
 np = length(x);
 
