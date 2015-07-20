@@ -48,7 +48,7 @@ axes(AX)
 [tint,~] = ginput(2);
 
 if(diff(tint)<0) % Should be increasing
-    tint = fliplr(tint);
+    tint = flipud(tint);
 end
 end
 
