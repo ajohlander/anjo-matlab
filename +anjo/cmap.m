@@ -17,6 +17,7 @@ function [cmap] = cmap(varargin)
 %   Special colormaps, are read from files
 %       'dawn'      -   from colormap.org
 %       'boxer'     -   good colormap
+%       'stillill'  -   white-blue-black colormap
 %
 %   Colors:
 %       'red'
@@ -39,7 +40,7 @@ else
 end
 inmap = 1; %Is a colormap that is NOT read.
 
-xmaps = {'dawn','boxer'}; % Colormaps from colormap.org
+xmaps = {'dawn','boxer','stillill'}; % Colormaps from colormap.org
 if(ismember(cMapMode,xmaps))
     inmap = 0;
 end
