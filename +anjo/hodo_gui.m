@@ -55,8 +55,8 @@ end
 function [Bcut,tlim] = cut_b(B,tint)
 t = B(:,1)-B(1,1);
 
-ind = [anjo.find_closest_index(tint(1),t),...
-    anjo.find_closest_index(tint(2),t)];
+ind = [anjo.fci(tint(1),t),...
+    anjo.fci(tint(2),t)];
 
 Bcut = B(ind(1):ind(2),:);
 tlim = B(ind,1)';

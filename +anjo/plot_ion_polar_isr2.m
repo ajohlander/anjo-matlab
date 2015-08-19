@@ -77,7 +77,7 @@ for i = 1:8
     for j = 1:16
         for k = 1:enRange
             velXY = velocity(k)*sind(theta(i));
-            velInd = anjo.find_closest_index(velXY,vVec);
+            velInd = anjo.fci(velXY,vVec);
             psdXY(velInd,j) = psdXY(velInd,j)+psdMat(i,j,k);
         end
     end

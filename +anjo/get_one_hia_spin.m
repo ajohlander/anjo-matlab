@@ -19,7 +19,7 @@ tint = [t-10,t+10];
 [~,tArray] = anjo.get_hia_data(tint,scInd,enMode);
 [F_3d,tvec] = anjo.get_hia_data(tint,scInd,enMode,'3d');
 
-dataInd = anjo.find_closest_index(t,tArray);
+dataInd = anjo.fci(t,tArray);
 tData = tArray(dataInd:dataInd+1);
 tInd = find(tvec==tData(1));
 
