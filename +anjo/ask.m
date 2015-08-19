@@ -6,7 +6,7 @@ function [answer] = ask(prompt,def_ans)
 %   answer = ANJO.ASK(prompt,def_ans) Specified default answer.
 
 if(nargin == 1)
-    def_ans = {''};
+    def_ans = '';
 end
 
 a = inputdlg(prompt,'anjo.ask',1,{def_ans});
@@ -16,4 +16,3 @@ if(isempty(a))
 else
     answer = a{1};
 end
-
