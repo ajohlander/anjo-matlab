@@ -31,7 +31,7 @@ tintData = [tint(1)-12,tint(2)+12];
 [ionMat,t] = anjo.get_hia_data(tintData,scInd,plotMode,enMode);
 [th,~,etab] = anjo.get_hia_values('all');
 if(strcmp(enMode,'half'))
-    etab = anjo.get_hia_values('half');
+    etab = anjo.get_hia_values('etab','half');
 end
 
 fPar = AX.Parent;
