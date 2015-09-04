@@ -12,8 +12,6 @@ function [y1,y2] = hodo(varargin)
 
 
 %% Input
-
-
 if(nargin == 1) % Only B-field
     h = anjo.afigure(3,[10,10]);
     B = varargin{1};
@@ -25,6 +23,9 @@ elseif(nargin == 2)
 else
     error('unknown input')
 end
+
+% 1 if arrows should be included
+plotArrows = 1;
 
 %% Minimum variance
 [Blmn,l,v] = irf_minvar(B);
@@ -46,17 +47,22 @@ end
 % First panel N-L
 plot(h(1),Blmn(:,4),Blmn(:,2),'k-')
 plot(h(1),Blmn(1,4),Blmn(1,2),'r*','MarkerSize',3)
-anjo.linearrow(h(1),Blmn(:,4),Blmn(:,2),10);
+
 
 % Second panel M-L
 plot(h(2),Blmn(:,3),Blmn(:,2))
 plot(h(2),Blmn(1,3),Blmn(1,2),'r*','MarkerSize',3)
-anjo.linearrow(h(2),Blmn(:,3),Blmn(:,2),10);
+
 
 % Thrid panel M-N
 plot(h(3),Blmn(:,4),Blmn(:,3))
 plot(h(3),Blmn(1,4),Blmn(1,3),'r*','MarkerSize',3)
-anjo.linearrow(h(3),Blmn(:,4),Blmn(:,3),10);
+
+if plotArrows
+    anjo.linearrow(h(3),Blmn(:,4),Blmn(:,3),10);
+    anjo.linearrow(h(2),Blmn(:,3),Blmn(:,2),10);
+    anjo.linearrow(h(1),Blmn(:,4),Blmn(:,2),10);
+end
 
 % Dashed line for Bn = 0
 
@@ -118,7 +124,7 @@ anjo.label(h(3),'y','$B_{M}$')
 
 %% Legend
 %setting h(3) to current axes
-axis(h(3));
+axes(h(3));
 
 % text position
 tPos = [1.2875,0.58,0];
