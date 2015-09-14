@@ -10,9 +10,9 @@ function [F,t] = get_hia_data(tint,scInd,varargin)
 %   mode:
 %       'default'   - returns full 4-D matrix.
 %       '3d'        - like default but matrix N*16x8x31
-%       'energy'    - integrates over polar angle
-%       'polar'     - integrates over energy
-%       '1d'        - integrates over azimutal and polar angle
+%       'energy'    - averages over polar angle
+%       'polar'     - averages over energy
+%       '1d'        - averages over azimutal and polar angle
 %
 %   See also: ANJO.GET_ONE_HIA_SPIN, ANJO.GET_HIA_VALUES
 %
