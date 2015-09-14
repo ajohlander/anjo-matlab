@@ -21,7 +21,7 @@ mirf = findall(f.Children,'Type','uimenu','Label','&irf');
 %% Create menu items
 mh = uimenu(mirf,'Label','&anjo');
 mh.Separator = 'on';
-menuLabels = {'Print as...','Fix axes position','Restore x-axis'};
+menuLabels = {'Save as...','Fix axes position','Restore x-axis'};
 
 nl = length(menuLabels);
 m2h = gobjects(1,nl);
