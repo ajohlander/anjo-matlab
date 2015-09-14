@@ -48,7 +48,7 @@ if(nargin >= 3)
             
         if(strcmp(dataMode,pDa{3}))
             % sum over polar angle
-            F_2d = anjo.hia_sum_over_pol(F_3d);
+            F_2d = anjo.hia_avg_over_pol(F_3d);
             F = F_2d;
             
         elseif(strcmp(dataMode,pDa{4}))
@@ -59,7 +59,7 @@ if(nargin >= 3)
         elseif(strcmp(dataMode,pDa{2}))
             F = F_3d;
         elseif(strcmp(dataMode,pDa{5}))
-            F_2d = anjo.hia_sum_over_pol(F_3d);
+            F_2d = anjo.hia_avg_over_pol(F_3d);
             F_1d = hia_sum_over_az(F_2d);
             F = F_1d;
         end
