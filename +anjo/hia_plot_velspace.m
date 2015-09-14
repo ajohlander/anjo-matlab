@@ -18,7 +18,7 @@ function [varargout] = hia_plot_velspace(AX,F,varargin)
 if nargin == 1
     % 3D ion data
     f3d = AX;
-    AX = anjo.afigure;
+    AX = anjo.afigure(1,[10,8]);
 elseif nargin == 2
     f3d = F;
 else
