@@ -24,7 +24,7 @@
 %   gradient_line       - Plots a 2D line with a color gradient.
 %   hia_plot_velspace   - Plot CIS-HIA data in velocity space.
 %   hia_recalc_psd      - Recalculates PSD from 31 to 16 energy bins.
-%   hia_sum_over_pol    - Sums a 4D ion HIA matrix over the polar angle.
+%   hia_avg_over_pol    - Sums a 4D ion HIA matrix over the polar angle.
 %   hodo                - Plots B-field in hodograms in an LMN frame.
 %   hodo_gui            - GUI for creating hodograms.
 %   import_c_data       - Downloads data from CSA, stores it in ~/Data/caalocal.

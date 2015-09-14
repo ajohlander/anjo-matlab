@@ -1,8 +1,8 @@
-function [F_2d] = hia_sum_over_pol(F_3d,varargin)
-%ANJO.HIA_SUM_OVER_POL Sums a 4D ion HIA matrix over the polar angle.
+function [F_2d] = hia_avg_over_pol(F_3d,varargin)
+%ANJO.HIA_AVG_OVER_POL Sums a 4D ion HIA matrix over the polar angle.
 %
-%   ionMat = ANJO.HIA_SUM_OVER_POL(ion4d) Given F_3d of size 8x16Nx31,
-%   sums over polar angle with factor cos(th). Returns 2d matrix ionMat
+%   ionMat = ANJO.HIA_AVG_OVER_POL(ion4d) Given F_3d of size 8x16Nx31,
+%   averages over polar angle with factor cos(th). Returns 2d matrix ionMat
 %   with size Nx16x31.
 %   
 %   Also works with reduced energy resolution.
@@ -30,7 +30,7 @@ for i = thRange
     for j = 1:tn
         for k = 1:en
             fval = F_3d(i,j,k)*cosd(th(i));
-            F_2d(j,k) = F_2d(j,k)+fval;
+            F_2d(j,k) = F_2d(j,k)+fval/8;
         end
     end
 end
