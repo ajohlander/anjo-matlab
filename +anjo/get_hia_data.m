@@ -53,14 +53,14 @@ if(nargin >= 3)
             
         elseif(strcmp(dataMode,pDa{4}))
             % sum over energy
-            F_2d = hia_sum_over_energy(F_3d);
+            F_2d = hia_avg_over_energy(F_3d);
             F = F_2d;
             
         elseif(strcmp(dataMode,pDa{2}))
             F = F_3d;
         elseif(strcmp(dataMode,pDa{5}))
             F_2d = anjo.hia_avg_over_pol(F_3d);
-            F_1d = hia_sum_over_az(F_2d);
+            F_1d = hia_avg_over_az(F_2d);
             F = F_1d;
         end
     end
@@ -92,19 +92,19 @@ end
 
 end
 
-function [F_1d] = hia_sum_over_az(F_2d)
+function [F_1d] = hia_avg_over_az(F_2d)
 % Input is 3d matrix, size:     16Nx31
 % Output is 2d matrix, size:    1x31
 
-F_1d = sum(F_2d,1);
+F_1d = sum(F_2d,1)/16;
 
 end
 
-function [F_2d] = hia_sum_over_energy(F_3d)
-% Input is 3d matrix, size:     8x16Nx31
+function [F_2d] = hia_avg_over_energy(F_3d)
+% Input is 3d matrix, size:     8x16Nx31/16
 % Output is 2d matrix, size:    8*16N
 
-F_2d = squeeze(sum(F_3d,3));
+F_2d = squeeze(sum(F_3d,3))/size(F_3d,3);
 
 end
 
