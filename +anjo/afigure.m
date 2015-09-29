@@ -1,4 +1,4 @@
-function [h,f] = afigure(subNum,figSize)
+function varargout = afigure(subNum,figSize)
 %ANJO.AFIGURE Quick way to call irf_plot.
 %
 %   ANJO.AFIGURE(subNum) initiates figure with number of panels subNum.
@@ -50,6 +50,13 @@ end
 anjo.figmenu(f)
 
 
+%% Output
+if nargout == 1
+    varargout{1} = h;
+elseif nargout == 2
+    varargout{1} = h;
+    varargout{2} = f;
+end
 
 
 
