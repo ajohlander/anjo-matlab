@@ -12,6 +12,8 @@ function out = fpi_plot_proj(varargin)
 %
 %   Planes: 'xy', 'yz', 'zx'.
 %
+%   Very unfinished.
+%
 %   TODO: Implement planes other than 'xy'. Implement time interval.
 
 
@@ -42,7 +44,7 @@ end
 etab = 0:31;
 % Guess the elevation (or polar??) angle
 th = linspace(-90,90,16);
-th = zeros(1,16);
+%th = zeros(1,16);
 % Guess the azimuth
 phi0 = 165;
 phi = linspace(phi0,phi0+360,32);
