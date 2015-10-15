@@ -88,7 +88,11 @@ end
 
 %% Output
 if(nargout == 1)
-    varargout{1} = out{1};
+    if iscell(out)
+        varargout{1} = out{1};
+    else
+        varargout{1} = out;
+    end
 elseif(nargout == N)
     if(isc)
         varargout = out;
@@ -104,7 +108,9 @@ end
 
 function out = is_in(x,y)
 % Is x in y? Returns x if it is, otherwise empty cell or matrix.
-
-out = x(ismember(x,y));
-
+if iscell(x) && iscell(y{1})
+    out = x(ismember(lower(x),lower(y)));
+else
+    out = x(ismember(x,y));
+end
 end
