@@ -12,7 +12,7 @@ function out = fpi_plot_proj(varargin)
 %
 %   Planes: 'xy', 'yz', 'zx'.
 %
-%   Very unfinished.
+%   Very unfinished. Only works for ions!
 %
 %   TODO: Implement planes other than 'xy'. Implement time interval.
 
@@ -41,18 +41,22 @@ else
     end
 end
 
-etab = 0:31;
-% Guess the elevation (or polar??) angle
-th = linspace(-90,90,16);
-%th = zeros(1,16);
-% Guess the azimuth
-phi0 = 165;
-phi = linspace(phi0,phi0+360,32);
+% etab = 0:31;
+% % Guess the elevation (or polar??) angle
+% th = linspace(-90,90,16);
+% %th = zeros(1,16);
+% % Guess the azimuth
+% phi0 = 165;
+% phi = linspace(phi0,phi0+360,32);
 
+% Guess all values in one line!!!
+[th,phi,itab,~] = anjo.m.fpi_vals;
+u = irf_units;
+v = sqrt(2.*itab.*u.e./u.mp)./1e3;
 
 nTh = length(th);
 nPhi = length(phi);
-nEn = length(etab);
+nEn = length(itab);
 
 %% Logs
 % Give some output about whats happening
@@ -79,8 +83,6 @@ switch plane
     case 'xy'
         % 2D matrix to be filled.
         f2d = zeros(nPhi,nEn);
-        
-        v = 0:31;
         
         % Rebins data
         for i = 1:nTh

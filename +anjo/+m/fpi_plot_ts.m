@@ -40,41 +40,45 @@ end
 %% Data handling
 
 f = [];
-f.t = irf_time(F.time.data,'ttns>epoch');
+f.t = F.time.epochUnix;
 F4d = F.data;
 % Format of F4d is assumed to be [t,E,phi,th]
 
-etab = logspace(0,5,32)*1e3;
-% Guess the elevation (or polar??) angle
-th = linspace(-90,90,16);
-%th = zeros(1,16);
-% Guess the azimuth
-phi0 = 165;
-phi = linspace(phi0,phi0+360,32);
+% etab = logspace(0,5,32)*1e3;
+% % Guess the elevation (or polar??) angle
+% th = linspace(-90,90,16);
+% %th = zeros(1,16);
+% % Guess the azimuth
+% phi0 = 165;
+% phi = linspace(phi0,phi0+360,32);
+
+% Guess all values in one line!!!
+[th,phi,etab,~] = anjo.m.fpi_vals;
 
 
 switch yd
     case 'e'
         % Average over theta and phi
-        F3d = squeeze(mean(F4d,4)); % [t,E,phi]
+        F3d = avg_over_pol(F4d,th);
+        %F3d = squeeze(mean(F4d,4)); % [t,E,phi]
         F2d = squeeze(mean(F3d,3)); % [t,E]
         
-        f.f = etab;
-        ylab = 'Energy [a.u.]';
+        f.f = etab*1e3;
+        ylab = 'Energy [eV]';
 
     case 'th'
         F3d = squeeze(mean(F4d,3)); % [t,E,th]
         F2d = squeeze(mean(F3d,2)); % [t,th]
         
         f.f = th;
-        ylab = '$\theta$ [guess]';
+        ylab = '$\theta$ [$^\circ$]';
         
     case 'phi'
         F3d = squeeze(mean(F4d,4)); % [t,E,phi]
         F2d = squeeze(mean(F3d,2)); % [t,phi]
         
         f.f = phi;
-        ylab = '$\phi$ [not really]';
+        ylab = '$\phi$ [$^\circ$]';
         
     otherwise
         error('Why do you come here?')
@@ -94,6 +98,18 @@ end
 
 if nargout == 1
     out = F2d;
+end
+
+end
+
+
+function F3d = avg_over_pol(F4d,th)
+
+s = size(F4d);
+F3d = zeros(s(1),s(2),s(3));
+for i = 1:16
+    fval = squeeze(F4d(:,:,:,i))*cosd(th(i));
+    F3d = F3d+fval/16;
 end
 
 end
