@@ -73,8 +73,8 @@ if length(tint) == 2
     %idstart = anjo.fci(tint(1).epoch,f.time.data);
     %...
 else
-    idt = find(tint.epoch<f.time.data,1);
-    %T = f.time.data(idt);
+    idt = find(tint.epoch<f.time.epoch,1);
+    T = f.time(idt);
     f3d = squeeze(f.data(idt,:,:,:));
 end
 
@@ -121,11 +121,11 @@ switch plane
 end
 
 %% Plotting
-hsf = pcolor(AX,X,Y,log10(f2dex'));
+pcolor(AX,X,Y,log10(f2dex'));
 shading(AX,'flat')
 
 % Adds colorbar
-hcb = colorbar;
+hcb = colorbar(AX);
 anjo.label(hcb,'$\log{F}$ [s$^3$km$^{-6}$]')
 
 % Reverses the direction of the x-axis. The Sun is to the left!
@@ -134,10 +134,10 @@ AX.XDir = 'reverse';
 anjo.label(AX,'x','$v_{x}$ [kms$^{-1}$]')
 anjo.label(AX,'y','$v_{y}$ [kms$^{-1}$]')
 
-axis equal
+axis(AX,'equal')
 
 if nargout == 1
-    out = hsf;
+    out = T;
 end
 
 end
