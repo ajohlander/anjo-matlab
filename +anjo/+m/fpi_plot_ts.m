@@ -4,10 +4,10 @@ function out = fpi_plot_ts(varargin)
 %   ANJO.M.FPI_PLOT_TS(AX,...) Plots in axes AX, initiates a figure if
 %   omitted.
 %
-%   ANJO.M.FPI_PLOT_PROJ(F,t) Spectrogram with energy on the y-axis.
+%   ANJO.M.FPI_PLOT_TS(F,t) Spectrogram with energy on the y-axis.
 %   Averaged over polar and azimuthal angle.
 %
-%   ANJO.M.FPI_PLOT_PROJ(...,yd) Specify what is on the y-axis.
+%   ANJO.M.FPI_PLOT_TS(...,yd) Specify what is on the y-axis.
 %
 %   yd: 'e', 'th', 'phi'.
 %
@@ -44,13 +44,6 @@ f.t = F.time.epochUnix;
 F4d = F.data;
 % Format of F4d is assumed to be [t,E,phi,th]
 
-% etab = logspace(0,5,32)*1e3;
-% % Guess the elevation (or polar??) angle
-% th = linspace(-90,90,16);
-% %th = zeros(1,16);
-% % Guess the azimuth
-% phi0 = 165;
-% phi = linspace(phi0,phi0+360,32);
 
 % Guess all values in one line!!!
 [th,phi,etab,~] = anjo.m.fpi_vals;
