@@ -1,8 +1,8 @@
-function [x1,x2,x3,x4] = fpi_vals()
+function [x1,x2,x3] = fpi_vals()
 %ANJO.M.FPI_VALS Returns guessed values for FPI
 %   
 %   Detailed explanation goes here
-%   [th,phi,ie,ee] = ANJO.M.VALS.FPI_VALS
+%   [etab,phi,th] = ANJO.M.FPI_VALS
 %
 
 
@@ -14,16 +14,24 @@ function [x1,x2,x3,x4] = fpi_vals()
 % For ions energy is from 10 eV to 30 keV. Same for electrons?
 % Lin -> Log. Not sure its good.
 [~,xi] = hist([log10(10),log10(30e3)],32);
-[~,xe] = hist([log10(10),log10(30e3)],32);
 
-ie = 10.^xi;
-ee = 10.^xe;
+etab = 10.^xi;
 
 % Out
-x1 = th;
-x2 = phi;
-x3 = ie;
-x4 = ee;
+if nargout == 0 % Print values
+%     disp(['etab = ', num2str(etab)])
+%     disp(['phi = ', num2str(phi)])
+%     disp(['th = ', num2str(th)])
+
+    A = [(1:32)',etab',phi',[th,NaN(1,16)]'];
+    disp(['                    ','etab        ','phi          ','th           '])
+    disp(round(A))
+else
+    x1 = etab;
+    x2 = phi;
+    x3 = th;
+end
+
 
 
 end

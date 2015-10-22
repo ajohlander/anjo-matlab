@@ -50,7 +50,7 @@ end
 % phi = linspace(phi0,phi0+360,32);
 
 % Guess all values in one line!!!
-[th,phi,itab,~] = anjo.m.fpi_vals;
+[etab,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
 v = sqrt(2.*itab.*u.e./u.mp)./1e3;
 
@@ -73,7 +73,8 @@ if length(tint) == 2
     %idstart = anjo.fci(tint(1).epoch,f.time.data);
     %...
 else
-    idt = find(tint.epoch<f.time.epoch,1);
+    idt = anjo.fci(tint.epochUnix,f.time.epochUnix,'ext');
+    %idt = find(tint.epoch<f.time.epoch,1);
     T = f.time(idt);
     f3d = squeeze(f.data(idt,:,:,:));
 end
@@ -174,7 +175,7 @@ shading(AX,'flat')
 
 % Adds colorbar
 hcb = colorbar(AX);
-anjo.label(hcb,'$\log{F}$ [??]') %[s$^3$km$^{-6}$]
+anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]') %[s$^3$km$^{-6}$]
 
 % Reverses the direction of the x-axis. The Sun is to the left!
 AX.XDir = 'reverse';
