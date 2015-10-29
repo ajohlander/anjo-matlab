@@ -33,29 +33,27 @@ elseif(nargin == 3)
     textStr = varargin{3};
 end
 
-%% Gets label handle
-switch axis
-    case 'x'
-        hLabel = AX.XLabel;
-        AX.UserData.XLabel.String = textStr;
-    case 'y'
-        hLabel = AX.YLabel;
-    case 'z'
-        hLabel = AX.ZLabel;
-    otherwise
-        error('Unknown axis')
+    %% Sets labels
+HL = gobjects(length(AX));
+for i = 1:length(AX)
+    switch axis
+        case 'x'
+            hLabel = AX(i).XLabel;
+            AX(i).UserData.XLabel.String = textStr;
+        case 'y'
+            hLabel = AX(i).YLabel;
+        case 'z'
+            hLabel = AX(i).ZLabel;
+        otherwise
+            error('Unknown axis')
+    end
+    
+    hLabel.String = textStr;
+    hLabel.FontSize = 16;
+    hLabel.Interpreter = 'latex';
+    
+    HL(i) = hLabel;
 end
-
-%% Sets label properties
-hLabel.String = textStr;
-hLabel.FontSize = 16;
-hLabel.Interpreter = 'latex';
-
-% % Make sure x-label is visible
-% if(strcmp(axis,'x')) 
-%     anjo.fix_x_label(AX);
-% end
-
 
 if(nargout == 1)
     out = hLabel;

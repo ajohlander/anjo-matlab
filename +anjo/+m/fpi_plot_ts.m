@@ -106,7 +106,11 @@ end
 anjo.label(AX,ylab)
 
 if nargout == 1
-    out = F2d;
+    if strcmpi(yd,'f')
+        out = F1d;
+    else
+        out = F2d;
+    end
 end
 
 end

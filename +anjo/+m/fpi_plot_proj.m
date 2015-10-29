@@ -52,11 +52,11 @@ end
 % Guess all values in one line!!!
 [etab,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
-v = sqrt(2.*itab.*u.e./u.mp)./1e3;
+v = sqrt(2.*etab.*u.e./u.mp)./1e3;
 
 nTh = length(th);
 nPhi = length(phi);
-nEn = length(itab);
+nEn = length(etab);
 
 %% Logs
 % Give some output about whats happening
