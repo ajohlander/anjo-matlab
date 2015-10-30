@@ -9,11 +9,9 @@ function out = fpi_plot_ts(varargin)
 %
 %   ANJO.M.FPI_PLOT_TS(F,yd) Specify what is on the y-axis.
 %
-%   ANJO.M.FPI_PLOT_TS(F,yd,etab,phi,th) Specify values, F.data must match.
-%
 %   yd: 'e', 'th', 'phi', 'f'.
 %
-%   Very unfinished.
+%   See also: ANJO.M.FPI_PART_DIST
 %
 %   TODO: Figure out angles and energies.
 
