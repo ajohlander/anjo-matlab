@@ -26,7 +26,7 @@ ish = ishandle(varargin{1});
 if ish
     AX = varargin{1};
 else
-    AX = anjo.afigure(1,[10,10]);
+    AX = anjo.afigure(1,[8,6]);
 end
 
 if nargin < 2+ish
@@ -69,9 +69,9 @@ irf.log('w',['Plotting in the ',plane, '-plane'])
 
 %% Data handling
 if length(tint) == 2
-    error('Time interval averaging is not yet implemented')
-    %idstart = anjo.fci(tint(1).epoch,f.time.data);
-    %...
+    %error('Time interval averaging is not yet implemented')
+    idt = anjo.fci(tint.epochUnix,f.time.epochUnix,'ext');
+    f3d = squeeze(mean(f.data(idt(1):idt(2),:,:,:)));
 else
     idt = anjo.fci(tint.epochUnix,f.time.epochUnix,'ext');
     %idt = find(tint.epoch<f.time.epoch,1);
