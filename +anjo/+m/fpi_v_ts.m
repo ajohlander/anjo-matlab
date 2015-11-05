@@ -1,5 +1,5 @@
 function [out] = fpi_v_ts(varargin)
-%ANJO.M.FPI_V_TS Plot particle data as a function of velocity and time.
+%ANJO.M.FPI_V_TS Plot ion data as a function of velocity and time.
 %
 %   ANJO.M.FPI_V_TS(AX,...) Plots in axes AX, initiates a figure if
 %   omitted.
@@ -58,15 +58,19 @@ switch yd
     case 'x'
         idv = 1;
         ylab = '$v_x$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vx.')
     case 'y'
         idv = 2;
         ylab = '$v_y$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vy.')
     case 'z'
         idv = 3;
         ylab = '$v_z$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vz.')
     case 't'
         idv = 4;
         ylab = '$v_t$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of sqrt(vy^2+vz^2).')
 end
 
 

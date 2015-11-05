@@ -17,9 +17,6 @@ function out = fpi_plot_ts(varargin)
 
 
 %% Input
-% if nargin < 2
-%     error('Too few input pararmeters.')
-% end
 if ishandle(varargin{1})
     ish = 1;
     AX = varargin{1};
@@ -36,6 +33,18 @@ if nargin == 2+ish
 else
     yd = pyd{1};
 end
+
+switch yd
+    case pyd{1}
+        irf.log('w','Plotting particle data as a function of energy.')
+    case pyd{2}
+        irf.log('w','Plotting particle data as a function of elevation angle.')
+    case pyd{3}
+        irf.log('w','Plotting particle data as a function of azimuthal angle.')
+    case pyd{4}
+        irf.log('w','Plotting particle data as a function of phase space density.')
+end
+
 
 %% Data handling
 

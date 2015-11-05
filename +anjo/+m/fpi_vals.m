@@ -1,9 +1,9 @@
 function [x1,x2,x3] = fpi_vals()
-%ANJO.M.FPI_VALS Returns guessed values for FPI
+%ANJO.M.FPI_VALS Returns guessed values for FPI.
 %   
-%   Detailed explanation goes here
-%   [etab,phi,th] = ANJO.M.FPI_VALS
-%
+%   [etab,phi,th] = ANJO.M.FPI_VALS Returns values. 
+%   
+%   ANJO.M.FPI_VALS Prints values.
 
 
 % returns an additional row vector, centers, indicating the location 
@@ -19,10 +19,6 @@ etab = 10.^xi;
 
 % Out
 if nargout == 0 % Print values
-%     disp(['etab = ', num2str(etab)])
-%     disp(['phi = ', num2str(phi)])
-%     disp(['th = ', num2str(th)])
-
     A = [(1:32)',etab',phi',[th,NaN(1,16)]'];
     disp(['                    ','etab        ','phi          ','th           '])
     disp(round(A))
