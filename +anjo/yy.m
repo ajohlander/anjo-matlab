@@ -48,8 +48,6 @@ if strcmpi(option,'none')
         ax2 = axes;
         AX = [ax,ax2];
         
-        anjo.yy(AX)
-        
     elseif length(ax) == 2
         irf.log('w','Linking and aligning axes.')
         
