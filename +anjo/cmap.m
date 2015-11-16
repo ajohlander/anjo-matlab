@@ -59,7 +59,9 @@ end
 
 %% Set which colors
 if ish
-    colormap(ax,anjo.cmap(cMapMode))
+    for i = 1:length(ax)
+        colormap(ax(i),anjo.cmap(cMapMode))
+    end
 else
     if(inmap)
         switch lower(cMapMode) % Special colormaps

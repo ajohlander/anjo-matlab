@@ -16,6 +16,8 @@ function out = yy(ax,option)
 %                   in x and y for both axes. Destroys zooming link between
 %                   irf panels.
 %
+%   TODO: Fix grids like plotyy.
+%
 %   Example: 
 %       figure;
 %       ax = anjo.yy;
@@ -115,7 +117,7 @@ else
             warning('off','MATLAB:uitools:uimode:callbackerror')
             
         case 'color'
-            irf.log('w','Colors y-axis and label.')
+            irf.log('w','Coloring y-axis and label.')
             hline = findall(ax(end).Children,'Type','Line');
             if isempty(hline) 
                 irf.log('w','Found no line')
