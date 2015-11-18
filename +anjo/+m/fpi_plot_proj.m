@@ -8,11 +8,14 @@ function out = fpi_plot_proj(varargin)
 %   plane for TSeries object (struct) of sky map data for time point t. If
 %   t is an interval data is averaged over interval.
 %
-%   ANJO.M.FPI_PLOT_PROJ(...,plane) Specify which plane to plot.
+%   ANJO.M.FPI_PLOT_PROJ(...,plane,first_parity) Specify which plane to
+%   plot. first_parity determines in which order the energy tables are
+%   used.
 %
 %   Planes: 'xy', 'yz', 'xz'.
 %
-%   TODO: Implement plane 'yz'.
+%   TODO: Implement plane 'yz'. Use correct energy tables for time
+%   averaging.
 
 
 %% Input
@@ -33,26 +36,40 @@ else
     tint = varargin{2+ish};
     f = varargin{1+ish};
     if nargin >= 3+ish
-        plane = anjo.incheck(varargin(3+ish:end),pp);
+        plane = varargin{3+ish};
+        if nargin == 4+ish
+            first_parity = varargin{4+ish};
+        else
+            first_parity = 0;
+        end
     else
         plane = pp{1};
+        first_parity = 0;
     end
 end
 
 % Guess all values in one line!!!
-[etab,phi,th] = anjo.m.fpi_vals;
+[e0,e1,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
-v = sqrt(2.*etab.*u.e./u.mp)./1e3;
+
 
 nTh = length(th);
 nPhi = length(phi);
-nEn = length(etab);
+nEn = length(e0);
 
 %% Logs
 % Give some output about whats happening
 if length(tint) == 2
     irf.log('w','Averaging particle data over time interval given')
+    % Also average over energy tables.
+    etab = geomean([e0;e1]);
+elseif first_parity == 0
+    etab = e0;
+else
+    etab = e1;
 end
+v = sqrt(2.*etab.*u.e./u.mp)./1e3;
+
 irf.log('w',['Plotting in the ',plane, '-plane'])
 
 
@@ -110,7 +127,7 @@ switch plane
         
     case 'xz'
         
-         % 2D matrix to be filled.
+        % 2D matrix to be filled.
         f2d = zeros(nTh*2,nEn);
         
         % Rebins data
@@ -142,7 +159,7 @@ switch plane
                 end
             end
         end
-       
+        
         % Add one row of zeros, no new data
         f2dex = zeros(size(f2d)+[1,0]);
         f2dex(1:end-1,:) = f2d;

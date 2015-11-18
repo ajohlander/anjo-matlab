@@ -7,13 +7,14 @@ function out = fpi_plot_ts(varargin)
 %   ANJO.M.FPI_PLOT_TS(F) Spectrogram with energy on the y-axis.
 %   Averaged over polar and azimuthal angle.
 %
-%   ANJO.M.FPI_PLOT_TS(F,yd) Specify what is on the y-axis.
+%   ANJO.M.FPI_PLOT_TS(F,yd,first_parity) Specify what is on the y-axis.
+%   first_parity determines in which order the energy tables are used.
 %
 %   yd: 'e', 'th', 'phi', 'f'.
 %
 %   See also: ANJO.M.FPI_PART_DIST
 %
-%   TODO: Figure out angles and energies.
+%   TODO: Figure out angles.
 
 
 %% Input
@@ -28,10 +29,20 @@ else
 end
 
 pyd = {'e','th','phi','f'};
-if nargin == 2+ish
-    yd = anjo.incheck(varargin(2+ish),pyd);
+if nargin >= 2+ish
+    if ischar(varargin{2+ish})
+        yd = varargin{2+ish};
+        if nargin == 3+ish
+            first_parity = varargin{3+ish};
+        else
+            first_parity = 0;
+        end
+    else
+        first_parity = varargin{2+ish};
+    end
 else
     yd = pyd{1};
+    first_parity = 0;
 end
 
 switch yd
@@ -51,12 +62,12 @@ end
 f = [];
 f.t = F.time.epochUnix;
 F4d = F.data;
+nt = size(F4d,1);
 % Format of F4d is assumed to be [t,E,phi,th]
 
 
 % Guess all values in one line!!!
-[etab,phi,th] = anjo.m.fpi_vals;
-
+[e0,e1,phi,th] = anjo.m.fpi_vals;
 
 switch yd
     case 'e'
@@ -65,7 +76,15 @@ switch yd
         %F3d = squeeze(mean(F4d,4)); % [t,E,phi]
         F2d = squeeze(mean(F3d,3)); % [t,E]
         
-        f.f = etab*1e3;
+        f.f = zeros(nt,32);
+        if first_parity == 0
+            f.f(1:2:end,:) = repmat(e0,floor(nt/2),1);
+            f.f(2:2:end,:) = repmat(e1,floor(nt/2),1);
+        else
+            f.f(1:2:end,:) = repmat(e1,floor(nt/2),1);
+            f.f(2:2:end,:) = repmat(e0,floor(nt/2),1);
+        end
+        f.f_label = 'eV'; 
         ylab = 'Energy [eV]';
 
     case 'th'
@@ -73,6 +92,7 @@ switch yd
         F2d = squeeze(mean(F3d,2)); % [t,th]
         
         f.f = th;
+        f.f_label = 'deg'; 
         ylab = '$\theta$ [$^\circ$]';
         
     case 'phi'
@@ -81,6 +101,7 @@ switch yd
         F2d = squeeze(mean(F3d,2)); % [t,phi]
 
         f.f = phi;
+        f.f_label = 'deg'; 
         ylab = '$\varphi$ [$^\circ$]';
         
     case 'f'
@@ -97,7 +118,7 @@ if strcmpi(yd,'f')
     irf_plot(AX,[f.t,double(F1d)]);
     AX.YScale = 'log';
 else
-    f.p = F2d;
+    f.p = double(F2d);
     irf_spectrogram(AX,f);
     irf_timeaxis(AX)
     

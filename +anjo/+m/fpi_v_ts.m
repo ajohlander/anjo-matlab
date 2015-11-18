@@ -7,7 +7,8 @@ function [out] = fpi_v_ts(varargin)
 %   ANJO.M.FPI_V_TS(F) Spectrogram with v_x on the y-axis. Integrated over
 %   v_y and v_z.
 %
-%   ANJO.M.FPI_V_TS(F,yd) Specify what is on the y-axis.
+%   ANJO.M.FPI_V_TS(F,yd,first_parity) Specify what is on the y-axis.
+%   first_parity determines in which order the energy tables are used.
 %
 %   yd: 'x', 'y', 'z', 't'
 %
@@ -23,35 +24,56 @@ if ish
 else
     AX = anjo.afigure(1,[10,10]);
 end
-
 F = varargin{1+ish};
-if nargin == 1+ish
-    yd = 'x';
+
+if nargin >= 2+ish
+    if ischar(varargin{2+ish})
+        yd = varargin{2+ish};
+        if nargin == 3+ish
+            first_parity = varargin{3+ish};
+        else
+            first_parity = 0;
+        end
+    else
+        first_parity = varargin{2+ish};
+    end
 else
-    yd = varargin{2+ish};
+    yd = 'x';
+    first_parity = 0;
 end
 
 %% Data handling
 
 F4d = double(F.data);
 % Format of F4d is [t,E,phi,th]
+nt = size(F4d,1);
 
-[etab,phi,th] = anjo.m.fpi_vals;
+[e0,e1,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
-v = sqrt(2.*etab.*u.e./u.mp)./1e3;
 
-%vf = [-fliplr(v),v];
-vf = linspace(-max(v),max(v),64);
+emat = zeros(nt,32);
+if first_parity == 0
+    emat(1:2:end,:) = repmat(e0,floor(nt/2),1);
+    emat(2:2:end,:) = repmat(e1,floor(nt/2),1);
+else
+    emat(1:2:end,:) = repmat(e1,floor(nt/2),1);
+    emat(2:2:end,:) = repmat(e0,floor(nt/2),1);
+end
+
+v = sqrt(2.*emat.*u.e./u.mp)./1e3;
+
+% Assumes n >= 3.
+vf = linspace(-max(v(first_parity+2,:)),max(v(first_parity+2,:)),64);
 
 nTh = length(th);
 nPhi = length(phi);
-nEn = length(etab);
-nt = size(F.data,1);
+nEn = length(e0);
 
 f = [];
 f.t = F.time.epochUnix;
 f.p = zeros(nt,nEn*2);
-f.f = vf*1e3;
+f.f_label = 'velocity [km/s]';
+f.f = vf;
 
 
 switch yd
@@ -74,21 +96,23 @@ switch yd
 end
 
 
-vp = zeros(1,4);
 
-for i = 1:nTh
-    for j = 1:nPhi
-        for k = 1:nEn
-            [vp(1),vp(2),vp(3)] = sph2cart(phi(j)*pi/180,th(i)*pi/180,v(k));
-            if idv == 4
-                vp(4) = sqrt(vp(2).^2+vp(3).^2);
+%odd
+for m = 1:2
+    vp = zeros(floor(nt/2),4);
+    for i = 1:nTh
+        for j = 1:nPhi
+            for k = 1:nEn
+                [vp(1),vp(2),vp(3)] = sph2cart(phi(j)*pi/180,th(i)*pi/180,v(m,k));
+                if idv == 4
+                    vp(4) = sqrt(vp(2).^2+vp(3).^2);
+                end
+                idx = anjo.fci(vp(idv),vf,'ext');
+                f.p(m:2:end,idx) = f.p(m:2:end,idx)+F4d(m:2:end,k,j,i)*cosd(th(i));
             end
-            idx = anjo.fci(vp(idv),vf,'ext');
-            f.p(:,idx) = f.p(:,idx)+F4d(:,k,j,i)*cosd(th(i));
         end
     end
 end
-
 %% Plotting
 
 irf_spectrogram(AX,f);

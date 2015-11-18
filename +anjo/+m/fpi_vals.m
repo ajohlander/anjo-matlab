@@ -1,7 +1,7 @@
-function [x1,x2,x3] = fpi_vals()
+function [x1,x2,x3,x4] = fpi_vals()
 %ANJO.M.FPI_VALS Returns guessed values for FPI.
 %   
-%   [etab,phi,th] = ANJO.M.FPI_VALS Returns values. 
+%   [e0,e1,phi,th] = ANJO.M.FPI_VALS Returns values.
 %   
 %   ANJO.M.FPI_VALS Prints values.
 
@@ -11,11 +11,12 @@ function [x1,x2,x3] = fpi_vals()
 [~,th] = hist([-90,90],16);
 [~,phi] = hist([-180,180],32);
 
-% For ions energy is from 10 eV to 30 keV. Same for electrons?
-% Lin -> Log. Not sure its good.
-[~,xi] = hist([log10(10),log10(30e3)],32);
 
-etab = 10.^xi;
+e0 = [10.627000,13.651100,17.535700,22.525700,28.935699,37.169800,47.747101,61.334202,78.787697,101.20800,130.00800,167.00400,214.52699,275.57401,353.99301,454.72699,584.12598,750.34802,963.87097,1238.1500,1590.4900,2043.0900,2624.4800,3371.3101,4330.6699,5563.0298,7146.0698,9179.5898,11791.800,15147.300,19457.699,24994.699];
+e1 = [12.044500,15.471900,19.874701,25.530300,32.795399,42.127800,54.115898,69.515297,89.296997,114.70800,147.35001,189.28000,243.14200,312.33200,401.21100,515.38202,662.04102,850.43500,1092.4399,1403.3101,1802.6400,2315.6101,2974.5500,3821,4908.3198,6305.0601,8099.2598,10404,13364.600,17167.699,22053.100,28328.600];
+
+% only for printing
+etab = geomean([e0;e1]);
 
 % Out
 if nargout == 0 % Print values
@@ -23,12 +24,11 @@ if nargout == 0 % Print values
     disp(['                    ','etab        ','phi          ','th           '])
     disp(round(A))
 else
-    x1 = etab;
-    x2 = phi;
-    x3 = th;
+    x1 = e0;
+    x2 = e1;
+    x3 = phi;
+    x4 = th;
 end
-
-
 
 end
 
