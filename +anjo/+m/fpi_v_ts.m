@@ -53,10 +53,10 @@ u = irf_units;
 
 emat = zeros(nt,32);
 if first_parity == 0
-    emat(1:2:end,:) = repmat(e0,floor(nt/2),1);
+    emat(1:2:end,:) = repmat(e0,floor(nt/2)+mod(nt,2),1);
     emat(2:2:end,:) = repmat(e1,floor(nt/2),1);
 else
-    emat(1:2:end,:) = repmat(e1,floor(nt/2),1);
+    emat(1:2:end,:) = repmat(e1,floor(nt/2)+mod(nt,2),1);
     emat(2:2:end,:) = repmat(e0,floor(nt/2),1);
 end
 
@@ -114,12 +114,12 @@ for m = 1:2
     end
 end
 %% Plotting
-
+f.p = f.p*1e30;
 irf_spectrogram(AX,f);
 irf_timeaxis(AX)
 
-hcb = colorbar(AX);
-anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]')
+% hcb = colorbar(AX);
+% anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]')
 
 anjo.label(AX,ylab)
 

@@ -23,7 +23,6 @@ for i = 1:n
     end 
 end
 
-AX(1).Position
 hcb = colorbar(AX(1));
 left = hcb.Position(1);
 

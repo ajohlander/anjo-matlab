@@ -78,10 +78,10 @@ switch yd
         
         f.f = zeros(nt,32);
         if first_parity == 0
-            f.f(1:2:end,:) = repmat(e0,floor(nt/2),1);
+            f.f(1:2:end,:) = repmat(e0,floor(nt/2)+mod(nt,2),1);
             f.f(2:2:end,:) = repmat(e1,floor(nt/2),1);
         else
-            f.f(1:2:end,:) = repmat(e1,floor(nt/2),1);
+            f.f(1:2:end,:) = repmat(e1,floor(nt/2)+mod(nt,2),1);
             f.f(2:2:end,:) = repmat(e0,floor(nt/2),1);
         end
         f.f_label = 'eV'; 
@@ -118,7 +118,7 @@ if strcmpi(yd,'f')
     irf_plot(AX,[f.t,double(F1d)]);
     AX.YScale = 'log';
 else
-    f.p = double(F2d);
+    f.p = double(F2d)*1e30;
     irf_spectrogram(AX,f);
     irf_timeaxis(AX)
     
@@ -127,8 +127,8 @@ else
         AX.YTick = [1e2,1e3,1e4];
     end
     
-    hcb = colorbar(AX);
-    anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]')
+%     hcb = colorbar(AX);
+%     anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]')
 end
 
 anjo.label(AX,ylab)

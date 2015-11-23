@@ -177,7 +177,7 @@ switch plane
 end
 
 %% Plotting
-pcolor(AX,X,Y,log10(f2dex'));
+pcolor(AX,X,Y,log10(f2dex')*30);
 shading(AX,'flat')
 
 % Adds colorbar
