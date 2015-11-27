@@ -42,6 +42,32 @@ else
     first_parity = 0;
 end
 
+
+switch yd
+    case 'x'
+        vv = [1,0,0];
+        ylab = '$v_x$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vx.')
+    case 'y'
+        vv = [0,1,0];
+        ylab = '$v_y$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vy.')
+    case 'z'
+        vv = [0,0,1];
+        ylab = '$v_z$ [kms$^{-1}$]';
+        irf.log('w','Plotting ion data as a function of vz.')
+    case 't'
+        error('Our posturings, our imagined self-importance, the delusion that we have some privileged position in the Universe, are challenged by this point of pale light.')
+    otherwise
+        if isnumeric(yd)
+            vv = yd;
+        else
+            error('The Earth is the only world known so far to harbor life. There is nowhere else, at least in the near future, to which our species could migrate.')
+
+        end
+end
+
+
 %% Data handling
 
 F4d = double(F.data);
@@ -51,6 +77,17 @@ nt = size(F4d,1);
 [e0,e1,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
 
+% Phi handling
+if isfield(F.userData,'phi') && ~isempty(F.userData.phi)
+    phi = double(F.userData.phi.data)-180; %remove this
+else
+    phi = repmat(phi,nt,1);
+end
+
+nTh = length(th);
+nEn = length(e0);
+nPhi = size(phi,2); % look out for bug here
+    
 emat = zeros(nt,32);
 if first_parity == 0
     emat(1:2:end,:) = repmat(e0,floor(nt/2)+mod(nt,2),1);
@@ -65,9 +102,6 @@ v = sqrt(2.*emat.*u.e./u.mp)./1e3;
 % Assumes n >= 3.
 vf = linspace(-max(v(first_parity+2,:)),max(v(first_parity+2,:)),64);
 
-nTh = length(th);
-nPhi = length(phi);
-nEn = length(e0);
 
 f = [];
 f.t = F.time.epochUnix;
@@ -75,44 +109,29 @@ f.p = zeros(nt,nEn*2);
 f.f_label = 'velocity [km/s]';
 f.f = vf;
 
-
-switch yd
-    case 'x'
-        idv = 1;
-        ylab = '$v_x$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vx.')
-    case 'y'
-        idv = 2;
-        ylab = '$v_y$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vy.')
-    case 'z'
-        idv = 3;
-        ylab = '$v_z$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vz.')
-    case 't'
-        idv = 4;
-        ylab = '$v_t$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of sqrt(vy^2+vz^2).')
-end
-
-
-
-%odd
 for m = 1:2
-    vp = zeros(floor(nt/2),4);
+    len = length(m:2:nt);
+    vp = zeros(len,3);
     for i = 1:nTh
         for j = 1:nPhi
             for k = 1:nEn
-                [vp(1),vp(2),vp(3)] = sph2cart(phi(j)*pi/180,th(i)*pi/180,v(m,k));
-                if idv == 4
-                    vp(4) = sqrt(vp(2).^2+vp(3).^2);
-                end
-                idx = anjo.fci(vp(idv),vf,'ext');
-                f.p(m:2:end,idx) = f.p(m:2:end,idx)+F4d(m:2:end,k,j,i)*cosd(th(i));
+                azi = phi(m:2:end,j)*pi/180;
+                elev = repmat(th(i),len,1)*pi/180;
+                r = v(m:2:end,k);
+                
+                [vp(:,1),vp(:,2),vp(:,3)] = sph2cart(azi,elev,r);
+                
+                % I'm sure this is a good operation!
+                vproj = diag(repmat(vv,len,1)*vp');
+                
+                idv = anjo.fci(vproj,vf,'ext');
+                
+                f.p(m:2:end,idv) = f.p(m:2:end,idv)+repmat(F4d(m:2:end,k,j,i),1,len).*cosd(th(i));
             end
         end
     end
 end
+   
 %% Plotting
 f.p = f.p*1e30;
 irf_spectrogram(AX,f);
