@@ -63,11 +63,15 @@ f = [];
 f.t = F.time.epochUnix;
 F4d = F.data;
 nt = size(F4d,1);
-% Format of F4d is assumed to be [t,E,phi,th]
-
+% Format of F4d is [t,E,phi,th]
 
 % Guess all values in one line!!!
 [e0,e1,phi,th] = anjo.m.fpi_vals;
+
+% Phi handling
+if isfield(F.userData,'phi') && ~isempty(F.userData.phi)
+    phi = double(F.userData.phi.data)-180;
+end
 
 switch yd
     case 'e'
