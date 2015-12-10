@@ -4,17 +4,18 @@ function [out] = fpi_v_ts(varargin)
 %   ANJO.M.FPI_V_TS(AX,...) Plots in axes AX, initiates a figure if
 %   omitted.
 %
-%   ANJO.M.FPI_V_TS(F) Spectrogram with v_x on the y-axis. Integrated over
+%   ANJO.M.FPI_V_TS(F) Spectrogram with v_x on the y-axis. Averaged over
 %   v_y and v_z.
 %
-%   ANJO.M.FPI_V_TS(F,yd,first_parity) Specify what is on the y-axis.
-%   first_parity determines in which order the energy tables are used.
+%   ANJO.M.FPI_V_TS(...,yd) Specify what is on the y-axis. Can be axis name
+%   or vector (vector is normalized).
 %
-%   yd: 'x', 'y', 'z', 't'
+%   yd: 'x', 'y', 'z'
 %
-%   See also: ANJO.M.FPI_PLOT_TS, ANJO.M.FPI_PLOT_PROJ
+%   Assumes F.userData.emat exist and is good.
 %
-%   TODO: Is there a reasonable way to average data instead of integrating?
+%   See also: ANJO.M.FPI_PLOT_TS, ANJO.M.FPI_PLOT_PROJ,
+%   ANJO.M.FPI_GET_DISTR
 
 
 %% Input
@@ -27,118 +28,109 @@ end
 F = varargin{1+ish};
 
 if nargin >= 2+ish
-    if ischar(varargin{2+ish})
+    if ischar(varargin{2+ish}) || length(varargin{2+ish})==3
         yd = varargin{2+ish};
-        if nargin == 3+ish
-            first_parity = varargin{3+ish};
-        else
-            first_parity = 0;
-        end
-    else
-        first_parity = varargin{2+ish};
     end
 else
     yd = 'x';
-    first_parity = 0;
 end
 
-
-switch yd
-    case 'x'
-        vv = [1,0,0];
-        ylab = '$v_x$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vx.')
-    case 'y'
-        vv = [0,1,0];
-        ylab = '$v_y$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vy.')
-    case 'z'
-        vv = [0,0,1];
-        ylab = '$v_z$ [kms$^{-1}$]';
-        irf.log('w','Plotting ion data as a function of vz.')
-    case 't'
-        error('Our posturings, our imagined self-importance, the delusion that we have some privileged position in the Universe, are challenged by this point of pale light.')
-    otherwise
-        if isnumeric(yd)
-            vv = yd;
-        else
+if ischar(yd)
+    switch yd
+        case 'x'
+            vv = [1,0,0];
+            ylab = '$v_x$ [kms$^{-1}$]';
+            irf.log('w','Plotting ion data as a function of vx.')
+        case 'y'
+            vv = [0,1,0];
+            ylab = '$v_y$ [kms$^{-1}$]';
+            irf.log('w','Plotting ion data as a function of vy.')
+        case 'z'
+            vv = [0,0,1];
+            ylab = '$v_z$ [kms$^{-1}$]';
+            irf.log('w','Plotting ion data as a function of vz.')
+        case 't'
+            error('Our posturings, our imagined self-importance, the delusion that we have some privileged position in the Universe, are challenged by this point of pale light.')
+        otherwise
             error('The Earth is the only world known so far to harbor life. There is nowhere else, at least in the near future, to which our species could migrate.')
-
-        end
+    end
+elseif isnumeric(yd) && length(yd)==3
+    vv = yd/norm(yd); % For good measure
+    irf.log('w',['Plotting ion data along n = [',num2str(vv),'].'])
+    ylab = '$v_{n}$ [kms$^{-1}$]';
+else
+    error('Why do you come here, and whyhyhyhyhyhyhyyy do you hang around?')
 end
 
 
 %% Data handling
 
 F4d = double(F.data);
+%F4d = ones(87,32,32,16);
 % Format of F4d is [t,E,phi,th]
 nt = size(F4d,1);
 
-[e0,e1,phi,th] = anjo.m.fpi_vals;
+[e0,~,phi,th] = anjo.m.fpi_vals;
 u = irf_units;
 
 % Phi handling
 if isfield(F.userData,'phi') && ~isempty(F.userData.phi)
-    phi = double(F.userData.phi.data)-180; %remove this
+    phi = double(F.userData.phi.data)-180; %to get same as Matlab syntax
 else
     phi = repmat(phi,nt,1);
 end
 
 nTh = length(th);
 nEn = length(e0);
-nPhi = size(phi,2); % look out for bug here
-    
-emat = zeros(nt,32);
-if first_parity == 0
-    emat(1:2:end,:) = repmat(e0,floor(nt/2)+mod(nt,2),1);
-    emat(2:2:end,:) = repmat(e1,floor(nt/2),1);
-else
-    emat(1:2:end,:) = repmat(e1,floor(nt/2)+mod(nt,2),1);
-    emat(2:2:end,:) = repmat(e0,floor(nt/2),1);
-end
+nPhi = size(phi,2);
+nV = 2*nEn;
 
-v = sqrt(2.*emat.*u.e./u.mp)./1e3;
+% Make theta to a matrix nt x 16
+th = repmat(th,nt,1);
 
-% Assumes n >= 3.
-vf = linspace(-max(v(first_parity+2,:)),max(v(first_parity+2,:)),64);
+emat = F.userData.emat;
+
+vmat = sqrt(2.*emat.*u.e./u.mp)./1e3;
+% v0 = sqrt(2.*e0.*u.e./u.mp)./1e3;
+% v1 = sqrt(2.*e1.*u.e./u.mp)./1e3;
+
+% Grid velocity
+% vg = linspace(-max(vmat(first_parity+2,:)),max(vmat(first_parity+2,:)),nV);
+vg = linspace(-2000,2000,nV);
 
 
 f = [];
 f.t = F.time.epochUnix;
-f.p = zeros(nt,nEn*2);
+f.p = zeros(nt,nV);
 f.f_label = 'velocity [km/s]';
-f.f = vf;
+f.f = vg;
 
-for m = 1:2
-    len = length(m:2:nt);
-    vp = zeros(len,3);
-    for i = 1:nTh
-        for j = 1:nPhi
-            for k = 1:nEn
-                azi = phi(m:2:end,j)*pi/180;
-                elev = repmat(th(i),len,1)*pi/180;
-                r = v(m:2:end,k);
-                
-                [vp(:,1),vp(:,2),vp(:,3)] = sph2cart(azi,elev,r);
-                
-                % I'm sure this is a good operation!
-                vproj = diag(repmat(vv,len,1)*vp');
-                
-                idv = anjo.fci(vproj,vf,'ext');
-                
-                f.p(m:2:end,idv) = f.p(m:2:end,idv)+repmat(F4d(m:2:end,k,j,i),1,len).*cosd(th(i));
-            end
-        end
+% Awesome 4D matricies ,[t,E,phi,th]
+TH = repmat(th*pi/180,1,1,nEn,nPhi); % now [t,th,E,phi]
+TH = permute(TH,[1,3,4,2]);
+PHI = repmat(phi*pi/180,1,1,nEn,nTh); % now [t,phi,E,th]
+PHI = permute(PHI,[1,3,2,4]);
+VEL = repmat(vmat,1,1,nPhi,nTh); % now [t,E,phi,th], correct!
+
+[VX,VY,VZ] = sph2cart(PHI,TH,VEL);
+
+VN = VX.*vv(1)+VY.*vv(2)+VZ.*vv(3);
+
+for m = 1:nt
+    % To 3D
+    vn = squeeze(VN(m,:,:,:));
+    F3d = squeeze(F4d(m,:,:,:));
+    idv = anjo.fci(vn,vg,'ext');
+    for n = 1:nV
+        f.p(m,n) = nanmean(F3d(idv==n));
     end
 end
-   
+
+
 %% Plotting
 f.p = f.p*1e30;
 irf_spectrogram(AX,f);
 irf_timeaxis(AX)
-
-% hcb = colorbar(AX);
-% anjo.label(hcb,'$\log{F}$ [s$^3$cm$^{-6}$]')
 
 anjo.label(AX,ylab)
 
