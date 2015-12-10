@@ -70,29 +70,25 @@ F4d = double(F.data);
 % Format of F4d is [t,E,phi,th]
 nt = size(F4d,1);
 
-[e0,~,phi,th] = anjo.m.fpi_vals;
-u = irf_units;
+%[e0,~,phi,th] = anjo.m.fpi_vals;
 
-% Phi handling
-if isfield(F.userData,'phi') && ~isempty(F.userData.phi)
-    phi = double(F.userData.phi.data)-180; %to get same as Matlab syntax
-else
-    phi = repmat(phi,nt,1);
-end
 
-nTh = length(th);
-nEn = length(e0);
-nPhi = size(phi,2);
-nV = 2*nEn;
-
-% Make theta to a matrix nt x 16
-th = repmat(th,nt,1);
-
+% E
 emat = F.userData.emat;
-
+u = irf_units;
 vmat = sqrt(2.*emat.*u.e./u.mp)./1e3;
-% v0 = sqrt(2.*e0.*u.e./u.mp)./1e3;
-% v1 = sqrt(2.*e1.*u.e./u.mp)./1e3;
+
+% Phi
+phi = F.userData.phi;
+
+% Theta
+th = F.userData.th;
+
+nTh = size(th,2);
+nEn = size(emat,2);
+nPhi = size(phi,2);
+nV = 2*nEn; % Number of velocity grid points
+
 
 % Grid velocity
 % vg = linspace(-max(vmat(first_parity+2,:)),max(vmat(first_parity+2,:)),nV);
@@ -116,10 +112,13 @@ VEL = repmat(vmat,1,1,nPhi,nTh); % now [t,E,phi,th], correct!
 
 VN = VX.*vv(1)+VY.*vv(2)+VZ.*vv(3);
 
+% 4D psd matrix compensated for geometric factor
+F4d_comp = F4d.*cos(TH);
+
 for m = 1:nt
     % To 3D
     vn = squeeze(VN(m,:,:,:));
-    F3d = squeeze(F4d(m,:,:,:));
+    F3d = squeeze(F4d_comp(m,:,:,:));
     idv = anjo.fci(vn,vg,'ext');
     for n = 1:nV
         f.p(m,n) = nanmean(F3d(idv==n));

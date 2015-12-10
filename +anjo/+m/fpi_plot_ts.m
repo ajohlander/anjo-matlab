@@ -62,16 +62,9 @@ end
 f = [];
 f.t = F.time.epochUnix;
 F4d = F.data;
-nt = size(F4d,1);
+
 % Format of F4d is [t,E,phi,th]
-
-% Guess all values in one line!!!
-[e0,e1,phi,th] = anjo.m.fpi_vals;
-
-% Phi handling
-if isfield(F.userData,'phi') && ~isempty(F.userData.phi)
-    phi = double(F.userData.phi.data)-180;
-end
+[~,~,~,th] = anjo.m.fpi_vals;
 
 switch yd
     case 'e'
@@ -79,15 +72,7 @@ switch yd
         F3d = avg_over_pol(F4d,th);
         %F3d = squeeze(mean(F4d,4)); % [t,E,phi]
         F2d = squeeze(mean(F3d,3)); % [t,E]
-        
-        f.f = zeros(nt,32);
-        if first_parity == 0
-            f.f(1:2:end,:) = repmat(e0,floor(nt/2)+mod(nt,2),1);
-            f.f(2:2:end,:) = repmat(e1,floor(nt/2),1);
-        else
-            f.f(1:2:end,:) = repmat(e1,floor(nt/2)+mod(nt,2),1);
-            f.f(2:2:end,:) = repmat(e0,floor(nt/2),1);
-        end
+        f.f = F.userData.emat;
         f.f_label = 'eV'; 
         ylab = 'Energy [eV]';
 
@@ -104,7 +89,7 @@ switch yd
 %         F3d = squeeze(mean(F4d,4)); % [t,E,phi]
         F2d = squeeze(mean(F3d,2)); % [t,phi]
 
-        f.f = phi;
+        f.f = F.userData.phi;
         f.f_label = 'deg'; 
         ylab = '$\varphi$ [$^\circ$]';
         
