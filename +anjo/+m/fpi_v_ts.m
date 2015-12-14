@@ -119,7 +119,7 @@ for m = 1:nt
     % To 3D
     vn = squeeze(VN(m,:,:,:));
     F3d = squeeze(F4d_comp(m,:,:,:));
-    idv = anjo.fci(vn,vg,'ext');
+    idv = anjo.fci(vn,vg,'nan');
     for n = 1:nV
         f.p(m,n) = nanmean(F3d(idv==n));
     end
