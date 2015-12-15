@@ -1,4 +1,4 @@
-function [hcb] = cbar(AX)
+function [out] = cbar(AX)
 %ANJO.CBAR One colorbar for several panels.
 %   
 %   hcb = ANJO.CBAR(AX) Creates a colorbar that spans the right side of the
@@ -56,6 +56,10 @@ end
 
 for i = 1:n
     AX(i).CLim = clim;
+end
+
+if nargout == 1
+    out = hcb;
 end
 
 end

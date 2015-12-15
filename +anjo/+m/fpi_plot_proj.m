@@ -4,10 +4,10 @@ function varargout = fpi_plot_proj(varargin)
 %   ANJO.M.FPI_PLOT_PROJ(AX,...) Plots in axes AX, initiates a figure if
 %   omitted.
 %
-%   ANJO.M.FPI_PLOT_PROJ(F,t,x1,x2) Plots particle data in velocity space 
+%   ANJO.M.FPI_PLOT_PROJ(F,t,x1,x2) Plots particle data in velocity space
 %   for sky map data F for time point t. If t is an interval, data is
 %   averaged over interval. x1 and x2 are normal vector that defines the
-%   projection plane. x1 and x2 *must* be perpendicular.
+%   projection plane. x1 and x2 *must* be perpendicular but not normalized.
 %
 %   F must have the structure returned by anjo.m.fpi_get_distr.
 %
@@ -29,6 +29,13 @@ F = varargin{1+ish};
 tint = varargin{2+ish};
 x1 = varargin{3+ish};
 x2 = varargin{4+ish};
+show_cbar = 1;
+
+if nargin >= 5+ish
+    if ischar(varargin{5+ish}) && strcmpi(varargin{5+ish},'hidecolbar')
+        show_cbar = 0;
+    end
+end
 
 % string input
 if ischar(x1)
@@ -57,7 +64,7 @@ if ischar(x2)
 else
     yl2 = '2';
 end
-            
+
 % normalize for good measure
 x1 = x1/norm(x1);
 x2 = x2/norm(x2);
@@ -159,8 +166,10 @@ pcolor(AX,X,Y,log10(F2Mesh.*1e30));
 shading(AX,'flat')
 
 % Adds colorbar
-hcb = colorbar(AX);
-anjo.label(hcb,'$\log{F}$ [s$^3$km$^{-6}$]') %[s$^3$km$^{-6}$]
+if show_cbar
+    hcb = colorbar(AX);
+    anjo.label(hcb,'$\log{F}$ [s$^3$km$^{-6}$]') %[s$^3$km$^{-6}$]
+end
 
 anjo.label(AX,'x',['$v_{',yl1,'}$ [kms$^{-1}$]'])
 anjo.label(AX,'y',['$v_{',yl2,'}$ [kms$^{-1}$]'])
