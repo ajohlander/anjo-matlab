@@ -13,7 +13,7 @@ function [] = c2m_col(AX)
 
 if length(AX) > 1
     for i = 1:length(AX)
-        anjo.c2m_col(AX(i));
+        anjo.m.c2m_col(AX(i));
     end
     return;
 else
