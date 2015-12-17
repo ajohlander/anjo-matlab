@@ -20,7 +20,7 @@ else
     % from irf_pl_tx
     cluster_colors = {[0 0 0]; [1 0 0];[0 0.5 0];[0 0 1];[0 1 1]};
     % From https://lasp.colorado.edu/galaxy/display/mms/Plot+Standards
-    mms_colors = {[0 0 0]; [213,94,0]/255;[0,158,115]/255;[86,180,233]/255;[0 1 1]};
+    mms_colors = anjo.m.color;
     
     nc = length(cluster_colors);
     
