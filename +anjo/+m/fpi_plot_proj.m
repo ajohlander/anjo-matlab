@@ -73,7 +73,7 @@ x2 = x2/norm(x2);
 %% Logs
 % Give some output about whats happening
 
-if cross(x1,x2) ~= 0
+if abs(dot(x1,x2)) > 1e-10
     error('x1 and x2 must be perpendicular')
 else
     irf.log('w',['Plotting ion data as a function of '...
@@ -88,9 +88,7 @@ emat = F.userData.emat;
 u = irf_units;
 vmat = sqrt(2.*emat.*u.e./u.mp)./1e3;
 phi = F.userData.phi;
-th = F.userData.th;
 
-nTh = size(th,2);
 nPhi = size(phi,2);
 nEn = size(emat,2);
 
@@ -126,11 +124,9 @@ phig = linspace(-pi,pi,nPhi);
 [X,Y] = pol2cart(phiMesh-pi/nPhi,rMesh);    % Converts to cartesian
 
 % Awesome 4D matricies ,[t,E,phi,th]
-TH = repmat(th*pi/180,1,1,nEn,nPhi); % now [t,th,E,phi]
-TH = permute(TH,[1,3,4,2]);
-PHI = repmat(phi*pi/180,1,1,nEn,nTh); % now [t,phi,E,th]
-PHI = permute(PHI,[1,3,2,4]);
-VEL = repmat(vmat,1,1,nPhi,nTh); % now [t,E,phi,th], correct!
+TH = F.userData.TH;
+PHI = F.userData.PHI;
+VEL = F.userData.VEL;
 
 F4d_comp = F4d.*cos(TH);
 

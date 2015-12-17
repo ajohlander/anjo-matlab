@@ -66,27 +66,11 @@ end
 %% Data handling
 
 F4d = double(F.data);
-%F4d = ones(87,32,32,16);
 % Format of F4d is [t,E,phi,th]
 nt = size(F4d,1);
 
-%[e0,~,phi,th] = anjo.m.fpi_vals;
-
-
-% E
 emat = F.userData.emat;
-u = irf_units;
-vmat = sqrt(2.*emat.*u.e./u.mp)./1e3;
-
-% Phi
-phi = F.userData.phi;
-
-% Theta
-th = F.userData.th;
-
-nTh = size(th,2);
 nEn = size(emat,2);
-nPhi = size(phi,2);
 nV = 2*nEn; % Number of velocity grid points
 
 
@@ -94,19 +78,15 @@ nV = 2*nEn; % Number of velocity grid points
 % vg = linspace(-max(vmat(first_parity+2,:)),max(vmat(first_parity+2,:)),nV);
 vg = linspace(-2000,2000,nV);
 
-
 f = [];
 f.t = F.time.epochUnix;
 f.p = zeros(nt,nV);
 f.f_label = 'velocity [km/s]';
 f.f = vg;
 
-% Awesome 4D matricies ,[t,E,phi,th]
-TH = repmat(th*pi/180,1,1,nEn,nPhi); % now [t,th,E,phi]
-TH = permute(TH,[1,3,4,2]);
-PHI = repmat(phi*pi/180,1,1,nEn,nTh); % now [t,phi,E,th]
-PHI = permute(PHI,[1,3,2,4]);
-VEL = repmat(vmat,1,1,nPhi,nTh); % now [t,E,phi,th], correct!
+TH = F.userData.TH;
+PHI = F.userData.PHI;
+VEL = F.userData.VEL;
 
 [VX,VY,VZ] = sph2cart(PHI,TH,VEL);
 
