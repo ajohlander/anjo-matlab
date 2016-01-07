@@ -21,6 +21,7 @@ classdef Marker
         Size = 1;
         Color = [0,0,0]
         Visible = 'on'
+        Uistack = '';
     end
     
     properties(SetAccess = immutable)
@@ -52,6 +53,14 @@ classdef Marker
                 error('Unknown value of Visible')
             end
         end
+        
+        function obj = set.Uistack(obj,value)
+            if(strcmp(value,'bottom') || strcmp(value,'top') ||...
+                    strcmp(value,'up') || strcmp(value,'down'))
+                obj.Uistack = value;
+                obj.setUistack;
+            end
+        end
     end
     
     
@@ -68,6 +77,11 @@ classdef Marker
         function [] = update_visible(obj)
             for i = 1:obj.N
                 obj.Shapes(i).Visible = obj.Visible;
+            end
+        end
+        function [] = setUistack(obj)
+            for i = 1:obj.N
+                uistack(obj.Shapes(i),obj.Uistack);
             end
         end
 %         function [] = update_size(obj)

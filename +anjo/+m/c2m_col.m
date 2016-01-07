@@ -1,4 +1,4 @@
-function [] = c2m_col(AX)
+function [] = c2m_col(AX,type)
 %ANJO.M.C2M_COL Changes color of lines in a plot from Cluster to MMS.
 %
 %   ANJO.M.C2M_COL(AX) Finds all Line objects in an array of Axes and
@@ -11,9 +11,13 @@ function [] = c2m_col(AX)
 %    mms_colors = {[0 0 0]; [213,94,0]/255;[0,158,115]/255;[86,180,233]/255;[0 1 1]};
 
 
+if nargin < 2
+    type = 'Line';
+end
+
 if length(AX) > 1
     for i = 1:length(AX)
-        anjo.m.c2m_col(AX(i));
+        anjo.m.c2m_col(AX(i),type);
     end
     return;
 else
@@ -24,22 +28,22 @@ else
     
     nc = length(cluster_colors);
     
-    % Find all lines
-    hline = findall(AX.Children,'Type','Line');
+    % Find all of Type type
+    h = findall(AX.Children,'Type',type);
     
-    nl = length(hline);
+    nl = length(h);
     count = 0;
     
     for i = 1:nl
-        col = hline(i).Color;
+        col = h(i).Color;
         for j = 1:nc
             if isequal(col,cluster_colors{j})
-                hline(i).Color = mms_colors{j};
+                h(i).Color = mms_colors{j};
                 count = count+1;
             end
         end
     end
-    irf.log('w',['Changed colors on ',num2str(count),' lines.'])
+    irf.log('w',['Changed colors on ',num2str(count),' ',type,'(s).'])
 end
 
 end

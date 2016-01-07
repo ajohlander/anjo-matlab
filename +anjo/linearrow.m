@@ -31,6 +31,12 @@ if(nargin >= 2+hInp)
     end
 end
 
+if nargin==4+hInp
+    arf = varargin{3+hInp};
+else
+    arf = 60;
+end
+
 % If column vector, transpose
 if(iscolumn(x))
     x = x';
@@ -70,7 +76,7 @@ th = getTh(x,y,aip);
 
 %% Plot arrows
 
-s = (max(y)-min(y))/60;
+s = (max(y)-min(y))/arf;
 q = anjo.triangle(AX,x(aip),y(aip),th,s);
 axis(AX,'equal')
 

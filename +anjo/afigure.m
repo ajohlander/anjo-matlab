@@ -37,6 +37,7 @@ f.PaperPositionMode = 'auto';
 
 for i = 1:subNum
     h(i).UserData.XLabel.String = h(i).XLabel.String; % Stores XLabel for restoration
+    h(i).Layer = 'top'; % Axes visible over patches (and surfaces?).
     if(i ~= subNum)
         h(i).UserData.XLabel.Visible = 'off';
         h(i).XTickLabel = '';
