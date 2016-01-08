@@ -82,7 +82,7 @@ switch opt
         
     case 'update'
         delete(hbox)
-        box(AX,'on')
+        anjo.box(AX,'on')
 end
 
 if nargout == 1
