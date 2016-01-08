@@ -4,6 +4,7 @@ function [out] = box(AX,opt)
 
 if nargin == 0
     AX = gca;
+    opt = 'toggle';
 elseif nargin == 1
     if ishandle(AX(1))
         opt = 'toggle';
@@ -56,14 +57,16 @@ switch opt
             if ~is_held
                 hold(ax,'on')
             end
-            xlim = ax.XLim;
-            ylim = ax.YLim;
+            xl = ax.XLim;
+            yl = ax.YLim;
             
-            x = [xlim(1),xlim(1),xlim(2),xlim(2),xlim(1)];
-            y = [ylim(1),ylim(2),ylim(2),ylim(1),ylim(1)];
+            x = [xl(1),xl(1),xl(2),xl(2),xl(1)];
+            y = [yl(1),yl(2),yl(2),yl(1),yl(1)];
             
             hbox = plot(ax,x,y,'k');
             hbox.UserData.anjotype = 'box';
+            
+            uistack(hbox,'top')
             
             if ~is_held
                 hold(ax,'off')

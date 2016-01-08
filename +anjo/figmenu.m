@@ -21,7 +21,7 @@ mirf = findall(f.Children,'Type','uimenu','Label','&irf');
 %% Create menu items
 mh = uimenu(mirf,'Label','&anjo');
 mh.Separator = 'on';
-menuLabels = {'Save as...','Fix axes position','Restore x-axis'};
+menuLabels = {'Save as...','Fix axes position','Restore x-axis','Box'};
 
 nl = length(menuLabels);
 m2h = gobjects(1,nl);
@@ -45,10 +45,6 @@ m13h(1).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''eps'')'
 m13h(2).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''pdf'')';
 m13h(3).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''png'')';
 
-if(nargout==1)
-    varargout{1} = mh;
-end
-
 
 % 2 - fix x-label
 m2h(2).Callback = 'anjo.fix_x_label';
@@ -64,7 +60,17 @@ cmd3 = ['tempFIG=gcf;',...
     'clear tempAX tempAXar tempFIG'];
 m2h(3).Callback = cmd3;
 
+% Box
+cmd4 = ['tempFIG=gcf;',...
+    'tempAXar = findall(tempFIG.Children,''Type'',''Axes'');',...
+    'anjo.box(tempAXar);',...
+    'clear tempAXar'];
+m2h(4).Callback = cmd4;
 
+
+if(nargout==1)
+    varargout{1} = mh;
+end
 
 end
 
