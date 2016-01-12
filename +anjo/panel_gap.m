@@ -1,6 +1,10 @@
 function [] = panel_gap(AX,d)
 %ANJO.PANEL_GAP Creates gap between panels
-%   Detailed explanation goes here
+%   
+%   ANJO.PANEL_GAP(AX) Acts on axes AX instead of current figure.
+%
+%   ANJO.PANEL_GAP(...,d) Specify gap d, where d is the gap width in
+%   fraction of panel height. Default is 0.05.
 
 
 % SHOULD SORT AXES ON POSITION(2)

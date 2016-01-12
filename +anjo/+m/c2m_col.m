@@ -1,8 +1,12 @@
-function [] = c2m_col(AX,type)
+function [] = c2m_col(AX,type,sc2sc)
 %ANJO.M.C2M_COL Changes color of lines in a plot from Cluster to MMS.
 %
 %   ANJO.M.C2M_COL(AX) Finds all Line objects in an array of Axes and
 %   changes the color of them from Cluster to MMS standard.
+%
+%   ANJO.M.C2M_COL(AX,type,sc2sc) Specify type (e.g: 'Text', 'Patch') and
+%   in which direction colors should be changed, 'm2c' to change from MMS
+%   to Cluster.
 %
 %   Colors are defined as:
 %    % from irf_pl_tx
@@ -10,14 +14,16 @@ function [] = c2m_col(AX,type)
 %    % From https://lasp.colorado.edu/galaxy/display/mms/Plot+Standards
 %    mms_colors = {[0 0 0]; [213,94,0]/255;[0,158,115]/255;[86,180,233]/255;[0 1 1]};
 
-
 if nargin < 2
     type = 'Line';
+end
+if nargin < 3
+    sc2sc = 'c2m';
 end
 
 if length(AX) > 1
     for i = 1:length(AX)
-        anjo.m.c2m_col(AX(i),type);
+        anjo.m.c2m_col(AX(i),type,sc2sc);
     end
     return;
 else
@@ -26,7 +32,16 @@ else
     % From https://lasp.colorado.edu/galaxy/display/mms/Plot+Standards
     mms_colors = anjo.m.color;
     
-    nc = length(cluster_colors);
+    switch lower(sc2sc)
+        case 'c2m'
+            col1 = cluster_colors;
+            col2 = mms_colors;
+        case 'm2c'
+            col1 = mms_colors;
+            col2 = cluster_colors;
+    end
+    
+    nc = length(col1);
     
     % Find all of Type type
     h = findall(AX.Children,'Type',type);
@@ -37,8 +52,8 @@ else
     for i = 1:nl
         col = h(i).Color;
         for j = 1:nc
-            if isequal(col,cluster_colors{j})
-                h(i).Color = mms_colors{j};
+            if isequal(col,col1{j})
+                h(i).Color = col2{j};
                 count = count+1;
             end
         end

@@ -1,6 +1,16 @@
 function [out] = box(AX,opt)
 %ANJO.BOX Draws a box around axes.
 %   Good for spectrograms
+%
+%   ANJO.BOX Toggles box on the current axes.
+%
+%   ANJO.BOX(AX) Toggles box on specified array of axes.
+%
+%   ANJO.BOX(...,opt) Specify option:
+%                       'toggle'    -   toggle
+%                       'on'/'off'  -   on/off
+%                       'update'    -   make new box after zoom
+%                           
 
 if nargin == 0
     AX = gca;
