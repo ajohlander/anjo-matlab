@@ -76,7 +76,7 @@ th = getTh(x,y,aip);
 
 %% Plot arrows
 
-s = (max(y)-min(y))/arf;
+s = arf;
 q = anjo.triangle(AX,x(aip),y(aip),th,s);
 axis(AX,'equal')
 
