@@ -10,7 +10,8 @@ function [out] = box(AX,opt)
 %                       'toggle'    -   toggle
 %                       'on'/'off'  -   on/off
 %                       'update'    -   make new box after zoom
-%                           
+%
+% TODO: Fix bug where subplots move when toggling box.
 
 if nargin == 0
     AX = gca;
@@ -23,7 +24,7 @@ elseif nargin == 1
     end
 end
 
-n = length(AX);
+n = numel(AX);
 
 hbox = gobjects(1,n);
 has_box = 0; % 0: no box, 1: box, 2: invisible box
