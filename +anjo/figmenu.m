@@ -41,9 +41,9 @@ for i = 1:3
     m13h(i) = uimenu(m2h(1),'Label',ftype{i});
 end
 % Callbacks
-m13h(1).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''eps'')';
-m13h(2).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''pdf'')';
-m13h(3).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig''),''png'')';
+m13h(1).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as eps''),''eps'')';
+m13h(2).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as pdf''),''pdf'')';
+m13h(3).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as png''),''png'')';
 
 
 % 2 - fix x-label
