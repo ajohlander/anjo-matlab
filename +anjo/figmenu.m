@@ -5,6 +5,8 @@ function [varargout] = figmenu(f)
 %
 %   mh = ANJO.FIGMENU Also returns handle to the uimenu.
 
+% TODO: Change to recursive syntax for security.
+
 %% Get the IRF menu handle
 if(nargin == 0)
     f = gcf;
@@ -21,7 +23,7 @@ mirf = findall(f.Children,'Type','uimenu','Label','&irf');
 %% Create menu items
 mh = uimenu(mirf,'Label','&anjo');
 mh.Separator = 'on';
-menuLabels = {'Save as...','Fix axes position','Restore x-axis','Box'};
+menuLabels = {'Fix axes position','Restore x-axis','Box'};
 
 nl = length(menuLabels);
 m2h = gobjects(1,nl);
@@ -31,26 +33,13 @@ for i = 1:nl
 end
 
 
-%% Create individual submenus and irf commands
+%% Create individual submenus and commands
 
-% 1 - printing
-ftype = {'eps','pdf','png'};
-
-m13h = gobjects(1,3);
-for i = 1:3
-    m13h(i) = uimenu(m2h(1),'Label',ftype{i});
-end
-% Callbacks
-m13h(1).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as eps''),''eps'')';
-m13h(2).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as pdf''),''pdf'')';
-m13h(3).Callback = 'anjo.print_fig(anjo.ask(''Name of file:'',''fig'',''Save as png''),''png'')';
+% 1 - fix x-label
+m2h(1).Callback = 'anjo.fix_x_label';
 
 
-% 2 - fix x-label
-m2h(2).Callback = 'anjo.fix_x_label';
-
-
-% 3 - remove time axis
+% 2 - remove time axis
 cmd3 = ['tempFIG=gcf;',...
     'tempAXar = findall(tempFIG.Children,''Type'',''Axes'');',...
     'tempAX = tempAXar(1);',...
@@ -58,14 +47,14 @@ cmd3 = ['tempFIG=gcf;',...
     'tempAX.XTickLabelMode = ''auto'';',...
     'tempAX.XTickMode = ''auto'';',...
     'clear tempAX tempAXar tempFIG'];
-m2h(3).Callback = cmd3;
+m2h(2).Callback = cmd3;
 
-% Box
+% 3 - Box
 cmd4 = ['tempFIG=gcf;',...
     'tempAXar = findall(tempFIG.Children,''Type'',''Axes'');',...
     'anjo.box(tempAXar);',...
-    'clear tempAXar'];
-m2h(4).Callback = cmd4;
+    'clear tempAXar tempFIG'];
+m2h(3).Callback = cmd4;
 
 
 if(nargout==1)
