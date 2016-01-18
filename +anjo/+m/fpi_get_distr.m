@@ -29,8 +29,24 @@ end
 if isempty(f)
     irf.log('w','No burst particle data available')
 else
-    [e0,e1,phiTab,thTab] = anjo.m.fpi_vals;
+    % Check if two or more cdfs are read.
+    if size(f,2) > 1
+        vers = zeros(1,length(f));
+        for i = 1:length(f)
+            vers(i) = get_fpi_version(f{i});
+        end
+        % Use file with newest version
+        [~,file_id] = max(vers);
+        f = f{file_id};
+        if size(phi,2) > 1
+            phi = phi{file_id};
+        end
+        if size(parity,2) > 1
+            parity = parity{file_id};
+        end
+    end
     
+    [e0,e1,phiTab,thTab] = anjo.m.fpi_vals;
     nt = length(f.time);
     emat = zeros(nt,32);
     id0 = find(parity.data==0);
@@ -56,6 +72,19 @@ else
 
     f = construct_4d_mat(f);
 end
+end
+
+function vers = get_fpi_version(F)
+    pattern = 'v[0-9].[0-9].[0-9]';
+    str = F.userData.GlobalAttributes.Logical_file_id{1};
+    [vid1,vid2] = regexp(str,pattern);
+    vstr = str(vid1+1:vid2);
+    
+    vers = 0;
+    for i = 1:3
+        vers = vers+str2double(vstr(2*i-1))*10^(3-i);
+    end
+
 end
 
 
