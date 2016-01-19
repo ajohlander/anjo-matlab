@@ -118,9 +118,11 @@ end
 nV = length(vg);
 
 % Azimuthal angle bin values
-phig = linspace(-pi,pi,nPhi);
+%phig = linspace(-pi,pi,nPhi);
+phig = mean(F.userData.phi)*pi/180;
+phig_edges = [phig-(phig(2)-phig(1))/2,phig(end)+(phig(2)-phig(1))/2];
 
-[phiMesh,rMesh] = meshgrid(phig,vg); % Creates the mesh
+[phiMesh,rMesh] = meshgrid(phig_edges,vg); % Creates the mesh
 [X,Y] = pol2cart(phiMesh-pi/nPhi,rMesh);    % Converts to cartesian
 
 % Awesome 4D matricies ,[t,E,phi,th]
@@ -144,7 +146,7 @@ for m = idt
     azi = squeeze(AZI(m,:,:,:));
     
     idv = anjo.fci(r,vg,'nan');
-    idazi = anjo.fci(azi,phig,'nan');
+    idazi = anjo.fci(azi,phig_edges,'nan','edges');
     
     for n = 1:nV
         for k = 1:nPhi
@@ -158,7 +160,8 @@ F2Mesh = squeeze(nanmean(F3Mesh,1));
 
 
 %% Plotting
-pcolor(AX,X,Y,log10(F2Mesh.*1e30));
+F2XMesh = [F2Mesh,zeros(nPhi,1)]; % Add empty column, should not interfere.
+pcolor(AX,X,Y,log10(F2XMesh.*1e30));
 shading(AX,'flat')
 
 % Adds colorbar

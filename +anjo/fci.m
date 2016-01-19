@@ -1,16 +1,16 @@
 function [index] = fci(num,vec,varargin)
 %ANJO.FCI Finds relevant index of a vector
-%   
+%
 %   index = ANJO.FCI(num, vec) Returns the index of the vector
 %   vec where vec is the closest to the number num. vec must be increasing
 %   or decreasing. num can be a vector or a scalar.
 %
 %   index = ANJO.FCI(num, vec, mode) Define how out of bounds number are
-%   handled. 
+%   handled.
 %
 %   Modes:
 %       'ext'   - Out of numbers outside the domain of vec is set to the
-%               extreme values: 1 or n = length(vec) dependant on sorting. 
+%               extreme values: 1 or n = length(vec) dependant on sorting.
 %               This is the default mode.
 %       'nan'   -  Out of numbers outside the domain of vec is set to NaN.
 %
@@ -20,10 +20,10 @@ function [index] = fci(num,vec,varargin)
 
 % Possible pararmeters, default is the first element.
 pm = {'ext','nan'};
+pb = {'centers','edges'};
 
 % Get parameters, deafult if not set.
-mode = anjo.incheck(varargin,pm);
-
+[mode,binning] = anjo.incheck(varargin,pm,pb);
 
 n = length(vec);
 maxV = max(vec);
@@ -38,7 +38,15 @@ end
 % Vector of indicies
 Y = 1:n;
 
-index = interp1(vec,Y,num,'nearest');
+if strcmpi(binning,pb{1})
+    index = interp1(vec,Y,num,'nearest');
+elseif strcmpi(binning,pb{2}) %edges
+    if strcmp(srt,'inc')
+        index = interp1(vec,Y,num,'previous');
+    else
+        index = interp1(vec,Y,num,'next');
+    end
+end
 
 % Handles out of bound numbers.
 switch mode
@@ -50,6 +58,7 @@ switch mode
             index(num<minV) = n;
             index(num>maxV) = 1;
         end
-    %Indices are set to NaN by the interp1 function.
+        %Indices are set to NaN by the interp1 function.
 end
+
 end
