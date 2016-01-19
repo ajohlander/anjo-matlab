@@ -14,11 +14,21 @@ function [] = c2m_col(AX,type,sc2sc)
 %    % From https://lasp.colorado.edu/galaxy/display/mms/Plot+Standards
 %    mms_colors = {[0 0 0]; [213,94,0]/255;[0,158,115]/255;[86,180,233]/255;[0 1 1]};
 
+% Possible types
+pt = {'Line','Text'};
+
 if nargin < 2
-    type = 'Line';
+    type = 'all';
 end
 if nargin < 3
     sc2sc = 'c2m';
+end
+
+if strcmpi(type,'all')
+    for i = 1:length(pt)
+        anjo.m.c2m_col(AX,pt{i},sc2sc);
+    end
+    return;
 end
 
 if length(AX) > 1
