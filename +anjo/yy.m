@@ -1,6 +1,6 @@
 function out = yy(ax,option)
 %ANJO.YY Double y-axes, compatible with irf_plot and surfaces.
-%   
+%
 %   ax = ANJO.YY(AX,...) Returns 1x2 vector of axes given an axes handle
 %   AX. ax(1) = AX;
 %
@@ -8,7 +8,7 @@ function out = yy(ax,option)
 %   to look good. Updates colors and colorbar.
 %
 %   ANJO.YY(...,option) Performs a specific action.
-%   
+%
 %   options:
 %       'color' -   updates the an y-axis to the same color as the 'first'
 %                   line. Is done by default.
@@ -18,7 +18,7 @@ function out = yy(ax,option)
 %
 %   TODO: Fix grids like plotyy.
 %
-%   Example: 
+%   Example:
 %       figure;
 %       ax = anjo.yy;
 %       pcolor(ax(1),magic(6))
@@ -67,10 +67,12 @@ if strcmpi(option,'none')
         
         % Set position for any y-labels on AX(2). Hack code.
         hl = AX(2).YLabel;
-        l_pos = hl.Position;
-        ax_pos = AX(1).Position;
-        dx = ax_pos(1)-l_pos(1);
-        hl.Position(1) = sum(ax_pos([1,3]))+dx-0.02;
+        %         l_pos = hl.Position;
+        %         ax_pos = AX(1).Position;
+        %         dx = ax_pos(1)-l_pos(1);
+        %         hl.Position(1) = sum(ax_pos([1,3]))+dx-0.02;
+        hl.Units = 'normalized';
+        hl.Position(1) = 1.1;
         
         
         % Check for colorbar in AX(1). AX(2) should not be a surface.
@@ -119,7 +121,7 @@ else
         case 'color'
             irf.log('w','Coloring y-axis and label.')
             hline = findall(ax(end).Children,'Type','Line');
-            if isempty(hline) 
+            if isempty(hline)
                 irf.log('w','Found no line')
             else
                 col = hline(1).Color;
