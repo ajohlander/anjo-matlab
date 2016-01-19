@@ -108,6 +108,7 @@ if strcmpi(yd,'f')
     AX.YScale = 'log';
 else
     f.p = double(F2d)*1e30;
+    f.plot_type = 'lin';
     irf_spectrogram(AX,f);
     irf_timeaxis(AX)
     
