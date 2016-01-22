@@ -82,9 +82,6 @@ for i = 1:n
 end
 q = anjo.Marker(hAr);
 delete(hLine)
-AX.XLim = xl;
-AX.YLim = yl+[-1,1]*0.1*diff(yl);
-
 end
 
 function sf = getSF(AX) % Scaling factor y/x
