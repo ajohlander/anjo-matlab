@@ -5,6 +5,11 @@ function [out] = cbar(AX)
 %   panels in axes vector AX. Automatically updates all panels to have the
 %   same color limits.
 
+if nargin < 1
+    AX = gca;
+end
+
+
 n = length(AX);
 width = 0.0400;
 

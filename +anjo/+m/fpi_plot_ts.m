@@ -71,14 +71,14 @@ switch yd
         % Average over theta and phi
         F3d = avg_over_pol(F4d,th);
         %F3d = squeeze(mean(F4d,4)); % [t,E,phi]
-        F2d = squeeze(mean(F3d,3)); % [t,E]
+        F2d = squeeze(nanmean(F3d,3)); % [t,E]
         f.f = F.userData.emat;
         f.f_label = 'eV'; 
         ylab = 'Energy [eV]';
 
     case 'th'
-        F3d = squeeze(mean(F4d,3)); % [t,E,th]
-        F2d = squeeze(mean(F3d,2)); % [t,th]
+        F3d = squeeze(nanmean(F4d,3)); % [t,E,th]
+        F2d = squeeze(nanmean(F3d,2)); % [t,th]
         
         f.f = th;
         f.f_label = 'deg'; 
@@ -87,7 +87,7 @@ switch yd
     case 'phi'
         F3d = avg_over_pol(F4d,th); %[t,E,phi]
 %         F3d = squeeze(mean(F4d,4)); % [t,E,phi]
-        F2d = squeeze(mean(F3d,2)); % [t,phi]
+        F2d = squeeze(nanmean(F3d,2)); % [t,phi]
 
         f.f = F.userData.phi;
         f.f_label = 'deg'; 
@@ -95,8 +95,8 @@ switch yd
         
     case 'f'
         F3d = avg_over_pol(F4d,th); %[t,E,phi]
-        F2d = squeeze(mean(F3d,2)); % [t,phi]
-        F1d = squeeze(mean(F2d,2)); % [t]
+        F2d = squeeze(nanmean(F3d,2)); % [t,phi]
+        F1d = squeeze(nanmean(F2d,2)); % [t]
 
         ylab = '$\log{F}$ [s$^3$cm$^{-6}$]';
     otherwise
@@ -108,7 +108,8 @@ if strcmpi(yd,'f')
     AX.YScale = 'log';
 else
     f.p = double(F2d)*1e30;
-    f.plot_type = 'lin';
+    f.p(f.p==0) = NaN;
+    f.plot_type = 'log';
     irf_spectrogram(AX,f);
     irf_timeaxis(AX)
     

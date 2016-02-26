@@ -57,7 +57,7 @@ if ischar(yd)
 elseif isnumeric(yd) && length(yd)==3
     vv = yd/norm(yd); % For good measure
     irf.log('w',['Plotting ion data along n = [',num2str(vv),'].'])
-    ylab = '$v_{n}$ [kms$^{-1}$]';
+    ylab = '$v_{\mathrm{n}}$ [kms$^{-1}$]';
 else
     error('Why do you come here, and whyhyhyhyhyhyhyyy do you hang around?')
 end
@@ -107,6 +107,7 @@ end
 
 
 %% Plotting
+f.p(f.p==0) = NaN;
 f.p = f.p*1e30;
 irf_spectrogram(AX,f);
 irf_timeaxis(AX)
