@@ -12,14 +12,23 @@ function [y1,y2] = hodo(varargin)
 
 
 %% Input
+% default v is empty
+v = [];
+h = anjo.afigure(3,[10,10]);
 if(nargin == 1) % Only B-field
-    h = anjo.afigure(3,[10,10]);
     B = varargin{1};
     scInd = 0;
 elseif(nargin == 2)
-    h = anjo.afigure(3,[10,10]);
+    if size(varargin{2},1) == 3 % v input
+        v = varargin{2};
+    else % scInd input
+        B = varargin{1};
+        scInd = varargin{2};
+    end
+elseif(nargin == 3)
     B = varargin{1};
     scInd = varargin{2};
+    v = varargin{3};
 else
     error('unknown input')
 end
@@ -28,8 +37,18 @@ end
 plotArrows = 1;
 
 %% Minimum variance
-[Blmn,l,v] = irf_minvar(B);
+if isempty(v)
+    [Blmn,l,v] = irf_minvar(B);
+else % only for TSeries
+    l = nan(1,3);        
+    Blmn = B;
+    if isa(B,'TSeries')
+        Blmn.data = (v*B.data')';
+    else
+        Blmn(:,2:4) = (v*B(:,2:4)')';
+    end
 
+end
 
 %% Initiate figure
 delete(h)
@@ -41,18 +60,14 @@ for i = 1:3
 end
 
 %% Plotting
-
 % Data
-
 % First panel N-L
 plot(h(1),Blmn(:,4),Blmn(:,2),'k-')
 plot(h(1),Blmn(1,4),Blmn(1,2),'r*','MarkerSize',3)
 
-
 % Second panel M-L
 plot(h(2),Blmn(:,3),Blmn(:,2))
 plot(h(2),Blmn(1,3),Blmn(1,2),'r*','MarkerSize',3)
-
 
 % Thrid panel M-N
 plot(h(3),Blmn(:,4),Blmn(:,3))

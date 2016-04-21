@@ -29,11 +29,11 @@ F = varargin{1+ish};
 tint = varargin{2+ish};
 x1 = varargin{3+ish};
 x2 = varargin{4+ish};
-show_cbar = 1;
+show_fluff = 1;
 
 if nargin >= 5+ish
-    if ischar(varargin{5+ish}) && strcmpi(varargin{5+ish},'hidecolbar')
-        show_cbar = 0;
+    if ischar(varargin{5+ish}) && strcmpi(varargin{5+ish},'nofluff')
+        show_fluff = 0;
     end
 end
 
@@ -161,17 +161,18 @@ F2Mesh = squeeze(nanmean(F3Mesh,1));
 
 %% Plotting
 F2XMesh = [F2Mesh,zeros(nPhi,1)]; % Add empty column, should not interfere.
-pcolor(AX,X,Y,log10(F2XMesh.*1e30));
+hsf = pcolor(AX,X,Y,log10(F2XMesh.*1e30));
 shading(AX,'flat')
+uistack(hsf,'bottom')
+set(AX, 'Layer', 'top');
 
 % Adds colorbar
-if show_cbar
+if show_fluff
     hcb = colorbar(AX);
     anjo.label(hcb,'$\log{F}$ [s$^3$km$^{-6}$]') %[s$^3$km$^{-6}$]
+    anjo.label(AX,'x',['$v_{',yl1,'}$ [kms$^{-1}$]'])
+    anjo.label(AX,'y',['$v_{',yl2,'}$ [kms$^{-1}$]'])
 end
-
-anjo.label(AX,'x',['$v_{',yl1,'}$ [kms$^{-1}$]'])
-anjo.label(AX,'y',['$v_{',yl2,'}$ [kms$^{-1}$]'])
 
 axis(AX,'equal')
 

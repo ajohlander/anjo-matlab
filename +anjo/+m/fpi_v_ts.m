@@ -76,7 +76,8 @@ nV = 2*nEn; % Number of velocity grid points
 
 % Grid velocity
 % vg = linspace(-max(vmat(first_parity+2,:)),max(vmat(first_parity+2,:)),nV);
-vg = linspace(-2000,2000,nV);
+% vg = linspace(-2000,2000,nV);
+vg = [-fliplr(F.userData.vmat(1,:)),F.userData.vmat(1,:)];
 
 f = [];
 f.t = F.time.epochUnix;

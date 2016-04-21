@@ -34,7 +34,7 @@ end
 if nargin==4+hInp
     arf = varargin{3+hInp};
 else
-    arf = 60;
+    arf = 1;
 end
 
 % If column vector, transpose

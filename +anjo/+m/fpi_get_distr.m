@@ -1,9 +1,13 @@
-function [f] = fpi_get_distr(type,tint,id,dataType)
+function [f] = fpi_get_distr(type,tint,id,dataType,dataMode)
 %ANJO.FPI_GET_DISTR Hacky way to get burst distribution function.
 %   Will be deleted when there is a better alternative
 
 if nargin < 4
     dataType = 'dist';
+end
+
+if nargin < 5
+    dataMode = 'brst';
 end
 
 if length(id)>1
@@ -16,17 +20,17 @@ u = irf_units;
 switch lower(type(1))
     case 'i'
         irf.log('w',['Reading FPI ion burst data from MMS',num2str(id),'.'])
-        c_eval('f = mms.db_get_ts(''mms?_fpi_brst_l1b_dis-dist'',[''mms?_dis_brstSkyMap_'',dataType],tint);',id);
-        c_eval('phi = mms.db_get_ts(''mms?_fpi_brst_l1b_dis-dist'',''mms?_dis_brstSkyMap_phi'',tint);',id);
-        c_eval('parity = mms.db_get_ts(''mms?_fpi_brst_l1b_dis-dist'',''mms?_dis_stepTable_parity'',tint);',id);
+        c_eval('f = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_dis-dist''],[''mms?_dis_'',dataType,''_brst''],tint);',id);
+        c_eval('phi = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_dis-dist''],[''mms?_dis_phi_'',dataMode],tint);',id);
+        c_eval('parity = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_dis-dist''],[''mms?_dis_steptable_parity_'',dataMode],tint);',id);
         % set mass
         m = u.mp;
     case 'e'
         
         irf.log('w',['Reading FPI electron burst data from MMS',num2str(id),'.'])
-        c_eval('f = mms.db_get_ts(''mms?_fpi_brst_l1b_des-dist'',[''mms?_des_brstSkyMap_'',dataType],tint);',id);
-        c_eval('phi = mms.db_get_ts(''mms?_fpi_brst_l1b_des-dist'',''mms?_des_brstSkyMap_phi'',tint);',id);
-        c_eval('parity = mms.db_get_ts(''mms?_fpi_brst_l1b_des-dist'',''mms?_des_stepTable_parity'',tint);',id);
+        c_eval('f = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',[''mms?_des_brstSkyMap_'',dataType],tint);',id);
+        c_eval('phi = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',''mms?_des_brstSkyMap_phi'',tint);',id);
+        c_eval('parity = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',''mms?_des_stepTable_parity'',tint);',id);
         % set mass
         m = u.me;
 end

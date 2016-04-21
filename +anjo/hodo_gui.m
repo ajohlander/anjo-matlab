@@ -1,4 +1,4 @@
-function [out] = hodo_gui(B,scInd)
+function [out] = hodo_gui(Binp,scInd,v)
 %ANJO.HODO_GUI GUI for creating hodograms.
 %
 %   ANJO.HODO_GUI(B,scInd) Opens a plot with magnetic field B. Click start and
@@ -8,7 +8,14 @@ function [out] = hodo_gui(B,scInd)
 
 [h,~] = anjo.afigure(1,[15,8]);
 
-anjo.plot_3d_b_field(h,B);
+B = Binp;
+if nargin == 3
+    B.data = (v*Binp.data')';
+else
+    v = [];
+end
+    
+irf_plot(h,B);
 hMark = gobjects(1);
 
 % Large number of hodograms
@@ -18,7 +25,7 @@ nHodo = 1;
 while true
     % Click start and stop time or vice versa
     try
-    tint = click_time(h);
+        tint = click_time(h);
     catch
         irf.log('w','Closing hodo_gui, hodograms are left open.');
         if(nargout == 1)
@@ -27,14 +34,14 @@ while true
         return
     end
     % Get B in time interval chosen
-    [Bcut,tlim] = cut_b(B,tint);
+    [Bcut,tlim] = cut_b(Binp,tint);
     
     % Marks time interval chosen
     delete(hMark)
     hMark = irf_pl_mark(h,tlim);
     
     % Plots hodogram
-    hHodo(:,nHodo) = anjo.hodo(Bcut,scInd);
+    hHodo(:,nHodo) = anjo.hodo(Bcut,scInd,v);
     nHodo = nHodo+1;
     
     % Hack to make loop work. Why does Matlab do this?
@@ -53,6 +60,11 @@ end
 end
 
 function [Bcut,tlim] = cut_b(B,tint)
+
+if isa(B,'TSeries');
+    B = [B.time.epochUnix,double(B.data)];
+end
+
 t = B(:,1)-B(1,1);
 
 ind = [anjo.fci(tint(1),t),...

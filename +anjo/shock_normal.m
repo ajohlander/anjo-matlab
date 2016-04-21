@@ -1,10 +1,10 @@
-function [varargout] = shock_normal(spec)
-%ANJO.SHOCK_NORMAL Calculates shock normals with different methods.
+function [varargout] = shock_normal(spec,leq90)
+%SHOCK_NORMAL Calculates shock normals with different methods.
 %
 %   Normal vectors are calculated by methods described in ISSI Scientific
 %   Report SR-001 Ch 10. (Schwartz 1998), and references therein.
 %   
-%   nd = ANJO.SHOCK_NORMAL(spec) returns structure nd which contains data
+%   nd = SHOCK_NORMAL(spec) returns structure nd which contains data
 %   on shock normal vectors given input with plasma parameters spec.
 %
 %   Input spec contains:
@@ -41,11 +41,19 @@ function [varargout] = shock_normal(spec)
 %
 %   TODO:   Fix and implement more models.
 %           Create GUI and do Monte Carlo to establish error bars.
+%           Implement good shock velocity estimate.
 
 
 % normal vector, according to different models
 nd = [];
 n = [];
+
+% leq90 = 1 if angles should be less or equal to 90 deg. 0 is good if doing
+% statistics
+if nargin == 1
+    leq90 = 1;
+end
+
 
 Bu = spec.Bu;
 Bd = spec.Bd;
@@ -78,8 +86,19 @@ if isfield(spec,'R')
 end
 
 % shock angle
-thBn = shock_angle(spec,n,'B');
-thVn = shock_angle(spec,n,'V');
+thBn = shock_angle(spec,n,'B',leq90);
+thVn = shock_angle(spec,n,'V',leq90);
+
+
+% Shock velocity from foot time
+% Fcp in Hz as given by irf_plasma_calc.
+% Shock foot timing (Gosling et al., 1982)
+Vsh.gt = shock_speed(spec,n,thBn,'gt');
+% Shock velocity from mass flux conservation
+Vsh.mf = shock_speed(spec,n,thBn,'mf');
+% Shock velocity from (Smith & Burton, 1988)
+Vsh.sb = shock_speed(spec,n,thBn,'sb');
+
 
 % info
 info = [];
@@ -95,7 +114,7 @@ nd.info = info;
 nd.n = n;
 nd.thBn = thBn;
 nd.thVn = thVn;
-
+nd.Vsh = Vsh;
 
 if nargout >= 1;
     varargout{1} = nd;
@@ -114,7 +133,7 @@ th = acosd(dot(Au,Ad)/(norm(Au)*norm(Ad)));
 
 end
 
-function th = shock_angle(spec,n,field)
+function th = shock_angle(spec,n,field,leq90)
 % field is 'B' or 'V'
 
 switch lower(field)
@@ -128,13 +147,13 @@ fnames = fieldnames(n);
 num = length(fnames);
 
 for i = 1:num
-    th.(fnames{i}) = thFn(n.(fnames{i}),a);
+    th.(fnames{i}) = thFn(n.(fnames{i}),a,leq90);
 end
 
 end
-function th = thFn(nvec,a)
+function th = thFn(nvec,a,leq90)
 th = acosd(dot(a,nvec)/(norm(a)));
-if th>90
+if th>90 && leq90
     th = 180-th;
 end
 end
@@ -156,9 +175,69 @@ c_eval('cmat(?,:) = structfun(fun?,n);',1:5)
 % fields that are by definition zero are set to 0?
 idz = sub2ind(size(cmat),[1,1,1,1,2,3,3,4,4,5,5],[1,3,4,5,1,2,3,2,4,2,5]);
 cmat(idz) = 0;
+end
 
+function Vsp = shock_speed(spec,n,thBn,method)
+
+fn = fieldnames(n);
+N = length(fn);
+
+if ~isfield(spec,'Fcp') || ~isfield(spec,'dTf') || ~isfield(spec,'d2u')
+    for k = 1:N
+        Vsp.(fn{k}) = 0;
+    end
+    return;
+else
+
+switch lower(method)
+    case 'gt' % Gosling and Thomsen
+        Vsp = speed_gosling_thomsen(spec,n,thBn,fn);
+    case 'mf' % Mass flux
+        Vsp = speed_mass_flux(spec,n,fn);
+    case 'sb' % Smith-Burton
+        Vsp = speed_smith_burton(spec,n,fn);
+end
 
 end
+end
+
+function Vsp = speed_gosling_thomsen(spec,n,thBn,fn)
+for k = 1:length(fn)
+    th = thBn.(fn{k})*pi/180;
+    nvec = n.(fn{k});
+    
+    % Notation as in (Gosling and Thomsen 1985)
+    W = spec.Fcp*2*pi;
+    t1 = acos((1-2*cos(th).^2)./(2*sin(th).^2))/W;
+    
+    f = @(th)W*t1*(2*cos(th).^2-1)+2*sin(th).^2.*sind(W*t1);
+    x0 = f(th)/(W*spec.dTf);
+    
+    Vsp.(fn{k}) = dot(spec.Vu,nvec)*(x0/(1+spec.d2u*x0));
+end
+end
+
+function Vsp = speed_mass_flux(spec,n,fn)
+% Assume all protons, not very good but no composition available
+u = irf_units;
+
+rho_u = spec.nu*u.mp;
+rho_d = spec.nd*u.mp;
+
+for k = 1:1:length(fn)
+    Vsp.(fn{k}) = (rho_d*dot(spec.Vd,n.(fn{k}))-rho_u*dot(spec.Vu,n.(fn{k})))/(rho_d-rho_u);
+end
+end
+
+function Vsp = speed_smith_burton(spec,n,fn)
+% Two solutions Vsp = Vun +- |dVxBd|/|dB|. Find a good way to pick the
+% correct one.
+for k = 1:1:length(fn)
+     Vsp.(fn{k}) = dot(spec.Vu,n.(fn{k}))+[1,-1]*norm(cross((spec.Vd-spec.Vu),spec.Bd))/norm(spec.Bd-spec.Bu);
+end
+
+end
+
 
 function n = farris_model(spec)
 u = irf_units;
@@ -167,7 +246,9 @@ L = 24.8*u.RE*1e-3; % in km
 x0 = 0*u.RE;
 y0 = 0*u.RE;
 
-n = shock_model(spec,eps,L,x0,y0);
+alpha = 3.8;
+
+n = shock_model(spec,eps,L,x0,y0,alpha);
 end
 
 
@@ -177,15 +258,16 @@ eps = 1.16;
 L = 23.3*u.RE*1e-3; % in km
 x0 = 3.0*u.RE;
 y0 = 0*u.RE;
+alpha = atand(spec.Vu(2)/spec.Vu(1));
 
-n = shock_model(spec,eps,L,x0,y0);
+n = shock_model(spec,eps,L,x0,y0,alpha);
 end
 
-function n = shock_model(spec,eps,L,x0,y0) %probably a bit bugged
+function n = shock_model(spec,eps,L,x0,y0,alpha) %probably a bit bugged
 
 R0 = [x0;y0;0];
 r0 = norm(R0);
-alpha = atand(spec.Vu(2)/spec.Vu(1));
+
 % rotation matrix
 M = [cosd(alpha),-sind(alpha),0;sind(alpha),cosd(alpha),0;0,0,1];
 
@@ -225,4 +307,6 @@ n = gradS'/norm(gradS);
 
 
 end
+
+
 
