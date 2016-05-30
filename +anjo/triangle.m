@@ -48,6 +48,10 @@ end
 hLine = plot(AX,x,y);
 xl = AX.XLim;
 yl = AX.YLim;
+xw = AX.Position(3);
+yw = AX.Position(4);
+
+f = xw*yl/(xl*yw);
 
 n = length(x);
 
@@ -59,6 +63,7 @@ else
     sf = 1;
 end
 
+
 if(length(th) == 1)
     th = th*ones(1,n);
 end
@@ -66,17 +71,22 @@ end
 axes(AX); % make AX current axes
 hAr = gobjects(1,n);
 
+pause(0.1)
 for i = 1:n
     R = [cosd(th(i)),-sind(th(i));sind(th(i)),cosd(th(i))];
     r1 = [-s,-s]';
-    r2 = [ 0,+s]';
+    r2 = [ 0,+s*2]';
     r3 = [+s,-s]';
     
     r1p = R*r1;
     r2p = R*r2;
     r3p = R*r3;
     
-    xt = x(i)+[r1p(1),r2p(1),r3p(1)]*sf;
+%     r1pp = r1p.*[1/f;1];
+%     r2pp = r2p.*[1/f;1];
+%     r3pp = r3p.*[1/f;1];
+    
+    xt = x(i)+[r1p(1),r2p(1),r3p(1)].*sf;
     yt = y(i)+[r1p(2),r2p(2),r3p(2)];
     hAr(i) = patch(xt,yt,'k');
 end
@@ -85,11 +95,15 @@ delete(hLine)
 end
 
 function sf = getSF(AX) % Scaling factor y/x
+AX.Units = 'points';
+
 p = AX.Position;
-dx = AX.XLim/p(3);
-dy = AX.YLim/p(4);
+dx = diff(AX.XLim)/p(3);
+dy = diff(AX.YLim)/p(4);
 
 sf = dx/dy;
+
+AX.Units = 'normalized';
 
 end
 

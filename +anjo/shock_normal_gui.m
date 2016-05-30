@@ -1,4 +1,4 @@
-function [nd] = shock_normal_gui(B,V,fullOutput)
+function [D1,D2,out3] = shock_normal_gui(B,V,fullOutput)
 %SHOCK_NORMAL_GUI Summary of this function goes here
 % Shock angle > 90 deg is difficult
 if nargin == 2
@@ -7,6 +7,14 @@ end
 
 [Bu,Bd,Vu,Vd] = get_fields(B,V);
 
+mean_spec = [];
+mean_spec.Bu = mean(Bu(:,2:4));
+mean_spec.Bd = mean(Bd(:,2:4));
+mean_spec.Vu = mean(Vu(:,2:4));
+mean_spec.Vd = mean(Vd(:,2:4));
+
+D2 = anjo.shock_normal(mean_spec,1);
+
 tint_u = Vu([1,end],1);
 tint_d = Vd([1,end],1);
 
@@ -14,6 +22,7 @@ N = floor(size(Bu,1)/2);
 
 t_u = rand(1,N)*(tint_u(2)-tint_u(1))+tint_u(1);
 t_d = rand(1,N)*(tint_d(2)-tint_d(1))+tint_d(1);
+
 
 
 %thBn = zeros(1,N);
@@ -26,6 +35,8 @@ for k = 1:N
     Vu_r = irf_resamp(Vu,t_u(k));
     Vd_r = irf_resamp(Vd,t_d(k));
 
+
+    
     spec = [];
     spec.Bu = Bu_r(1,2:4);
     spec.Bd = Bd_r(1,2:4);
@@ -60,13 +71,17 @@ for k = 1:N
 %     
 end
 
-nd = [];
+D1 = [];
 if fullOutput
-    nd.thBn = thBn;
+    D1.thBn = thBn;
 else
     th_fun = @(x)(mean(x)>90)*180+(-1)^(mean(x)>90)*mean(x);
-    nd.thBn = structfun(th_fun,thBn,'UniformOutput',0);
-    nd.dthBn = structfun(@(th)std(th),thBn,'UniformOutput',0);
+    D1.thBn = structfun(th_fun,thBn,'UniformOutput',0);
+    D1.dthBn = structfun(@(th)std(th),thBn,'UniformOutput',0);
+end
+
+if nargout == 3
+    out3 = mean_spec;
 end
 
 end
@@ -81,7 +96,7 @@ irf_plot(h(1),B);
 
 irf_plot(h(2),V)
 irf_plot_axis_align(h);
-
+irf_zoom(h,'x',[B.time(1).epochUnix,B.time(end).epochUnix])
 
 irf.log('w',['Mark ',num2str(2), ' time intervals for averaging.'])
 

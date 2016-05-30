@@ -29,7 +29,11 @@ nl = length(menuLabels);
 m2h = gobjects(1,nl);
 
 for i = 1:nl
-    m2h(i) = uimenu(mh,'Label',menuLabels{i});
+    if strcmp(menuLabels{i},'Restore x-axis')
+        m2h(i) = uimenu(mh,'Label',menuLabels{i},'Accelerator','x');
+    else
+        m2h(i) = uimenu(mh,'Label',menuLabels{i});
+    end
 end
 
 

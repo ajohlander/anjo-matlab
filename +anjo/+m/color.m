@@ -24,7 +24,7 @@ end
 mms_symbols = {'s','d','o','v'};
 
 
-    varargout{1} = mms_colors;
+varargout{1} = mms_colors;
 if nargout == 2
     varargout{2} = mms_symbols;
 end

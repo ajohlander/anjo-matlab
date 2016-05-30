@@ -1,5 +1,5 @@
 function [out] = linearrow(AX,varargin)
-%LINEARROW Draws arrows along a line
+%ANJO.LINEARROW Draws arrows along a line
 %
 %   ANJO.LINEARROW(AX,...) Acts on axis handle AX instead of current axis
 %
@@ -76,9 +76,9 @@ th = getTh(x,y,aip);
 
 %% Plot arrows
 
-s = arf;
+s = arf/20;
 q = anjo.triangle(AX,x(aip),y(aip),th,s);
-axis(AX,'equal')
+%axis(AX,'equal')
 
 %% Output
 if(nargout == 1)

@@ -13,8 +13,13 @@ function [varargout] = shock_normal(spec,leq90)
 %       Bd  -   Downstream magnetic field
 %       Vu  -   Upstream plasma bulk velocity
 %       Vd  -   Upstream plasma bulk velocity
+%       Optional:
 %       R   -   Spacecraft position as given by R =
-%       mms.get_data('R_gse',tint). (can be omitted)
+%       mms.get_data('R_gse',tint).
+%       d2u -   Down-to-up, is 1 or -1.
+%       dTf -   Delta t_foot.
+%       Fcp -   Reflected ion gyrofrequency in Hz.
+%       
 %
 %   Output nd contains:
 %
