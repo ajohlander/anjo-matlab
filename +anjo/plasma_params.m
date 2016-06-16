@@ -17,14 +17,14 @@ function dspec = plasma_params(spec)
 % OUTPUT PARAMETERS - symbol    - required input parameters
 % Speeds [km/s]
 % Alfven speed      - Va        - B,n
-% fast speed        - Vf        - B,n,Ti,Te
+% fast speed        - Vf        - B,V,n,Ti,Te
 %
 % Frequencies [s^-1] (not radians)
-% ion gyrofreq      - Fci       - B,V     (not thermal motion)
+% ion gyrofreq      - Fci       - B
 %
 % Lengths [km]
 % ion inert.len     - di        - n
-% ion gyroradius    - rci       - B,v     (not thermal motion)
+% ion gyroradius    - rci       - B,V     (not thermal motion)
 %
 % Unitless
 % Alfven Mach no.   - Ma        - B,V,n
@@ -32,7 +32,23 @@ function dspec = plasma_params(spec)
 % ion beta          - bi        - n,Ti
 % electron beta     - be        - n,Te
 % 
-% Example:
+% Example 1:
+% sp = [];
+% sp.B = [10,0,0];
+% sp.n = 1;
+% sp.Te = 100; sp.Ti=1000;
+% dsp = anjo.plasma_params(sp)
+%
+% dsp = 
+% 
+%      Va: 218.1204
+%      cs: 544.9255
+%     Fci: 0.1525
+%      di: 227.7108
+%      bi: 4.0267
+%      be: 0.4027
+% ----------------------
+% Example 2:
 % sp = [];
 % sp.Bu = 5; sp.Bd = 20;
 % sp.nu = 3; sp.nd = 12;
@@ -56,35 +72,24 @@ function dspec = plasma_params(spec)
 fn = fieldnames(spec);
 
 % find Bs
-idB_cell = strfind(fn,'B');
+%idBc = ;
+idB = ~cellfun(@isempty,strfind(fn,'B'));
 % regions
-rgsB = fn(find([idB_cell{:}])); % don't trust the warning
+rgsB = fn(idB); % don't trust the warning
 nR = numel(rgsB);
 rgs = cell(1,nR);
 for k = 1:nR
     rgs{k} = rgsB{k}(end);
+    if strcmp(rgs{k},'B')
+        rgs{k} = '';
+    end
 end
 
-if find(ismember(fn,['V',rgs{1}]))
-    hasV = 1;
-else
-    hasV = 0;
-end
-if find(ismember(fn,['n',rgs{1}]))
-    hasN = 1;
-else
-    hasN = 0;
-end
-if find(ismember(fn,['Ti',rgs{1}]))
-    hasTi = 1;
-else
-    hasTi = 0;
-end
-if find(ismember(fn,['Te',rgs{1}]))
-    hasTe = 1;
-else
-    hasTe = 0;
-end
+
+if find(ismember(fn,['V',rgs{1}])); hasV = 1; else hasV = 0; end
+if find(ismember(fn,['n',rgs{1}])); hasN = 1; else hasN = 0; end
+if find(ismember(fn,['Ti',rgs{1}])); hasTi = 1; else hasTi = 0; end
+if find(ismember(fn,['Te',rgs{1}])); hasTe = 1; else hasTe = 0; end
 
 
 %% Calculate parameters
@@ -98,18 +103,26 @@ if hasN
         dspec.(['Va',rgs{k}]) = v_alfv(spec.(['B',rgs{k}]),spec.(['n',rgs{k}]));
     end
 end
-% Fast
-if hasN && hasTi
+% Sound speed
+if hasTi && hasTe
     for k = 1:nR
-        dspec.(['Vf',rgs{k}]) = v_fast(spec.(['B',rgs{k}]),spec.(['n',rgs{k}]),spec.(['Ti',rgs{k}]),spec.(['Te',rgs{k}]));
+        dspec.(['cs',rgs{k}]) = v_sound(spec.(['Ti',rgs{k}]),spec.(['Te',rgs{k}]));
+    end
+end
+% Fast
+if hasN && hasTi && hasV
+    for k = 1:nR
+        dspec.(['Vf',rgs{k}]) = v_fast(spec.(['B',rgs{k}]),spec.(['V',rgs{k}]),spec.(['n',rgs{k}]),spec.(['Ti',rgs{k}]),spec.(['Te',rgs{k}]));
     end
 end
 
 
 %% Frequencies
+% Ion gyrofrequency
 for k = 1:nR
     dspec.(['Fci',rgs{k}]) = ion_gyro_freq(spec.(['B',rgs{k}]));
 end
+
 
 %% Lenghts
 % Ion inertial length
@@ -118,10 +131,10 @@ if hasN
         dspec.(['di',rgs{k}]) = ion_in_len(spec.(['n',rgs{k}]));
     end 
 end
-
+% Ion gyroradius
 if hasV
     for k = 1:nR
-        dspec.(['rg',rgs{k}]) = ion_gyro_rad(spec.(['B',rgs{k}]),spec.(['V',rgs{k}]));
+        dspec.(['rci',rgs{k}]) = ion_gyro_rad(spec.(['B',rgs{k}]),spec.(['V',rgs{k}]));
     end 
 end
 
@@ -134,7 +147,7 @@ if hasV && hasN
     end 
 end
 % fast Mach
-if hasV && hasN 
+if hasV && hasN && hasTi && hasTe
     for k = 1:nR
         dspec.(['Mf',rgs{k}]) = norm(spec.(['V',rgs{k}]))/dspec.(['Vf',rgs{k}]);
     end 
@@ -163,15 +176,22 @@ u = irf_units;
 Va = norm(B)/sqrt(u.mu0*n*u.mp)*1e-15; % km/s
 end
 
-function Vf =  v_fast(B,n,Ti,Te) % from Chen
+function cs = v_sound(Ti,Te) % not the same as in irf_plasma_calc
 u = irf_units;
-y = 5/3;
 
-Va = v_alfv(B,n)*1e3;
-cs = sqrt((Te+y*Ti)*u.e/u.mp);
+ye = 1; % Values from Chen book
+yi = 3;
+cs = sqrt((ye*Te*u.e+yi*Ti*u.e)/u.mp)*1e-3;
+end
 
-Vf = u.c*sqrt((Va^2+cs^2)/(u.c^2+Va^2))*1e-3;
-%Vf = sqrt( Va^2+cs^2+sqrt(((Va^2+cs^2)^2+4*Va^2*cs^2)) )*1e-3;
+function Vf =  v_fast(B,V,n,Ti,Te)
+th = acosd(dot(B,V)/(norm(B)*norm(V))); % put to 90 to get like Chen
+
+Va = v_alfv(B,n);
+cs = v_sound(Ti,Te);
+cms0 = sqrt(Va^2+cs^2);
+
+Vf = sqrt(cms0^2/2+sqrt(cms0^4/4-Va^2*cs^2*cosd(th)^2));
 end
 
 function Fci = ion_gyro_freq(B)
@@ -186,10 +206,10 @@ u = irf_units;
 di = u.c/sqrt(n*1e6*u.e^2/(u.eps0*u.mp))*1e-3;
 end
 
-function rg =  ion_gyro_rad(B,V) 
+function rci =  ion_gyro_rad(B,V) 
 u = irf_units;
 
-rg = u.mp*norm(V)*1e3/(u.e*norm(B)*1e-9)*1e-3;
+rci = u.mp*norm(V)*1e3/(u.e*norm(B)*1e-9)*1e-3;
 end
 
 function bi =  beta_i(B,n,Ti) 
