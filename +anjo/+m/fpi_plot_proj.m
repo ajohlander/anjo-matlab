@@ -73,7 +73,7 @@ x2 = x2/norm(x2);
 %% Logs
 % Give some output about whats happening
 
-if abs(dot(x1,x2)) > 1e-10
+if abs(dot(x1,x2)) > 5e-6
     error('x1 and x2 must be perpendicular')
 else
     irf.log('w',['Plotting ion data as a function of '...
@@ -156,7 +156,7 @@ for m = idt
 end
 
 % Average over time, if only one time step only squeeze
-F2Mesh = squeeze(nanmean(F3Mesh,1));
+F2Mesh = squeeze(nansum(F3Mesh,1));
 
 
 %% Plotting

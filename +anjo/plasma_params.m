@@ -31,7 +31,8 @@ function dspec = plasma_params(spec)
 % fast Mach no.     - Mf        - B,V,n,Ti,Te
 % ion beta          - bi        - n,Ti
 % electron beta     - be        - n,Te
-% 
+%
+% ----------------------
 % Example 1:
 % sp = [];
 % sp.B = [10,0,0];
@@ -66,6 +67,11 @@ function dspec = plasma_params(spec)
 %
 % See also: IRF_PLASMA_CALC ANJO.SHOCK_NORMAL
 % 
+
+
+% To convert the fast Mach number from upstream value to NIF:
+%   vfnif = cms^2
+%   Mfnif = 
 
 
  %% Handle input
@@ -173,10 +179,10 @@ end
 function Va =  v_alfv(B,n) 
 u = irf_units;
 
-Va = norm(B)/sqrt(u.mu0*n*u.mp)*1e-15; % km/s
+Va = irf_abs(B,1)/sqrt(u.mu0*n*u.mp)*1e-15; % km/s
 end
 
-function cs = v_sound(Ti,Te) % not the same as in irf_plasma_calc
+function cs = v_sound(Ti,Te) %
 u = irf_units;
 
 ye = 1; % Values from Chen book
@@ -185,19 +191,19 @@ cs = sqrt((ye*Te*u.e+yi*Ti*u.e)/u.mp)*1e-3;
 end
 
 function Vf =  v_fast(B,V,n,Ti,Te)
-th = acosd(dot(B,V)/(norm(B)*norm(V))); % put to 90 to get like Chen
+th = acosd(dot(B,V,2)./(irf_abs(B,1)*irf_abs(V,1))); % put to 90 to get like Chen
 
 Va = v_alfv(B,n);
 cs = v_sound(Ti,Te);
-cms0 = sqrt(Va^2+cs^2);
+cms0 = sqrt(Va.^2+cs.^2);
 
-Vf = sqrt(cms0^2/2+sqrt(cms0^4/4-Va^2*cs^2*cosd(th)^2));
+Vf = sqrt(cms0.^2/2+sqrt(cms0.^4/4-Va.^2.*cs.^2*cosd(th).^2));
 end
 
 function Fci = ion_gyro_freq(B)
 u = irf_units;
 
-Fci = u.e*norm(B)*1e-9/(u.mp)/(2*pi);
+Fci = u.e*irf_abs(B,1)*1e-9/(u.mp)/(2*pi);
 end
 
 function di =  ion_in_len(n) 
@@ -209,7 +215,7 @@ end
 function rci =  ion_gyro_rad(B,V) 
 u = irf_units;
 
-rci = u.mp*norm(V)*1e3/(u.e*norm(B)*1e-9)*1e-3;
+rci = u.mp*irf_abs(V,1)*1e3./(u.e*irf_abs(B,1)*1e-9)*1e-3;
 end
 
 function bi =  beta_i(B,n,Ti) 

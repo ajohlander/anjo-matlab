@@ -14,6 +14,7 @@ function [cmap] = cmap(varargin)
 %   Colormap Names:
 %       'standard'  -   similar to irf_colormap
 %       'anjo'      -   orange and blue
+%       'bluered'   -   like irf but white in middle
 %       'speedway'  -   white-yellow-red-blue
 %
 %   Special colormaps, are read from files
@@ -36,6 +37,7 @@ function [cmap] = cmap(varargin)
 
 %% Input
 ish = 0;
+N = 64; % number of points
 if(nargin == 0)
     cMapMode = 'standard';
 else
@@ -48,11 +50,14 @@ else
         end
     else
         cMapMode = varargin{1};
+        if nargin > 1
+            N = varargin{2};
+        end
     end
 end
 inmap = 1; %Is a colormap that is NOT read.
 
-xmaps = {'dawn','boxer','stillill'}; % Colormaps from colormap.org
+xmaps = {'dawn','boxer','stillill','panic','ask'}; % Colormaps from colormap.org
 if(ismember(cMapMode,xmaps))
     inmap = 0;
 end
@@ -85,6 +90,14 @@ else
                     1,0.7,0;...
                     0,0,0.8;...
                     0,0,0];
+            case 'bluered'
+                c = [0,0,1;...
+                    1,1,1;...
+                    1,0,0];
+         	case 'redblue'
+                c = [1,0,0;...
+                    1,1,1;...
+                    0,0,1];
             case 'speedway'
                 c = [255,255,255;...
                     255,255,000;...
@@ -127,10 +140,10 @@ else
 
 %% Create colormap
 cN = size(c,1);
-x = linspace(1,64,cN);
-cmap = zeros(64,3);
+x = linspace(1,N,cN);
+cmap = zeros(N,3);
 
-for i = 1:64
+for i = 1:N
     cmap(i,:) = interp1(x,c,i);
 end
 end

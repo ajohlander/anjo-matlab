@@ -28,9 +28,9 @@ switch lower(type(1))
     case 'e'
         
         irf.log('w',['Reading FPI electron burst data from MMS',num2str(id),'.'])
-        c_eval('f = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',[''mms?_des_brstSkyMap_'',dataType],tint);',id);
-        c_eval('phi = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',''mms?_des_brstSkyMap_phi'',tint);',id);
-        c_eval('parity = mms.db_get_ts(''mms?_fpi_brst_l2_des-dist'',''mms?_des_stepTable_parity'',tint);',id);
+        c_eval('f = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_des-dist''],[''mms?_des_'',dataType,''_brst''],tint);',id);
+        c_eval('phi = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_des-dist''],[''mms?_des_phi_'',dataMode],tint);',id);
+        c_eval('parity = mms.db_get_ts([''mms?_fpi_'',dataMode,''_l2_des-dist''],[''mms?_des_steptable_parity_'',dataMode],tint);',id);
         % set mass
         m = u.me;
 end
@@ -75,6 +75,8 @@ else
         f.userData.phi = repmat(phiTab,nt,1);
     else
         f.userData.phi = double(phi.data)-180;
+        f.userData.phi_inst = double(phi.data);
+        f.userData.th_inst = double(phi.data);
     end
     
     f.userData.th = repmat(thTab,nt,1);

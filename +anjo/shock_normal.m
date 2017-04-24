@@ -31,12 +31,21 @@ function [varargout] = shock_normal(spec,leq90)
 %               mx2 -   Mixed method 2
 %               mx3 -   Mixed method 3
 %           Models (only if R is included in spec):
-%               farris  -   Farris model
-%               slho    -   Slavin-Holzer model (not working now)
+%               farris  -   Farris, M. H., et al., 1991
+%               slho    -   Slavin, J. A. and Holzer, R. E., 1981 (corrected)
+%               fa4o    -   Fairfield, D. H., 1971
+%               fan4o   -   Fairfield, D. H., 1971
+%               foun    -   Formisano, V., 1979
 %
 %       thBn -  Angle between normal vector and spec.Bu, same fields as n.
 %
 %       thVn -  Angle between normal vector and spec.Vu, same fields as n.
+%
+%       Vsh  -  Structure containing shock velocities:
+%            Methods:
+%               gt  -   Gosling-Thomsen method using shock foot thickness.
+%               mf  -   Mass flux conservation.
+%               sb  -   Smith-Burton method (Gives two roots for some reason)
 %
 %       info -  Some more info:
 %           msh     -   Magnetic shear angle
@@ -44,8 +53,7 @@ function [varargout] = shock_normal(spec,leq90)
 %           cmat    -   Constraints matrix with normalized errors.
 %           Calclated from (10.9-10.13) in (Schwartz 1998).
 %
-%   TODO:   Fix and implement more models.
-%           Create GUI and do Monte Carlo to establish error bars.
+%   TODO:   Create GUI and do Monte Carlo to establish error bars.
 %           Implement good shock velocity estimate.
 
 
@@ -84,10 +92,16 @@ n.mx3 = cross(cross(delB,delV),delB)/norm(cross(cross(delB,delV),delB));
 
 % calculate model normals if R is inputted
 if isfield(spec,'R')
-    % Farris model
+    % Farris et al.
     n.farris = farris_model(spec);
-    % Slavin-Holzer model
+    % Slavin and Holzer mean
     n.slho = slavin_holzer_model(spec);
+    % Fairfield Meridian 4o
+    n.fa4o = fairfield_meridian_4o_model(spec);
+    % Fairfield Meridian No 4o
+    n.fan4o = fairfield_meridian_no_4o_model(spec);
+    % Formisano Unnorm. z = 0
+    n.foun = formisano_unnorm_model(spec);
 end
 
 % shock angle
@@ -121,7 +135,7 @@ nd.thBn = thBn;
 nd.thVn = thVn;
 nd.Vsh = Vsh;
 
-if nargout >= 1;
+if nargout >= 1
     varargout{1} = nd;
 else
     fnames = fieldnames(n);
@@ -187,23 +201,24 @@ function Vsp = shock_speed(spec,n,thBn,method)
 fn = fieldnames(n);
 N = length(fn);
 
-if ~isfield(spec,'Fcp') || ~isfield(spec,'dTf') || ~isfield(spec,'d2u')
-    for k = 1:N
-        Vsp.(fn{k}) = 0;
-    end
-    return;
-else
 
 switch lower(method)
-    case 'gt' % Gosling and Thomsen
-        Vsp = speed_gosling_thomsen(spec,n,thBn,fn);
+    case 'gt' % Gosling & Thomsen
+        if ~isfield(spec,'Fcp') || ~isfield(spec,'dTf') || ~isfield(spec,'d2u')
+            for k = 1:N
+                Vsp.(fn{k}) = 0;
+            end
+            return;
+        else
+           Vsp = speed_gosling_thomsen(spec,n,thBn,fn);
+        end
     case 'mf' % Mass flux
         Vsp = speed_mass_flux(spec,n,fn);
-    case 'sb' % Smith-Burton
+    case 'sb' % Smith & Burton
         Vsp = speed_smith_burton(spec,n,fn);
 end
 
-end
+
 end
 
 function Vsp = speed_gosling_thomsen(spec,n,thBn,fn)
@@ -245,72 +260,92 @@ end
 
 
 function n = farris_model(spec)
-u = irf_units;
 eps = 0.81;
-L = 24.8*u.RE*1e-3; % in km
-x0 = 0*u.RE;
-y0 = 0*u.RE;
+L = 24.8; % in RE
+x0 = 0;
+y0 = 0;
 
 alpha = 3.8;
 
 n = shock_model(spec,eps,L,x0,y0,alpha);
 end
 
-
-function n = slavin_holzer_model(spec) % Only produces NaNs
-u = irf_units;
+function n = slavin_holzer_model(spec) %
 eps = 1.16;
-L = 23.3*u.RE*1e-3; % in km
-x0 = 3.0*u.RE;
-y0 = 0*u.RE;
+L = 23.3; % in km
+x0 = 3.0;
+y0 = 0;
 alpha = atand(spec.Vu(2)/spec.Vu(1));
 
 n = shock_model(spec,eps,L,x0,y0,alpha);
 end
 
-function n = shock_model(spec,eps,L,x0,y0,alpha) %probably a bit bugged
+function n = fairfield_meridian_4o_model(spec) %
+eps = 1.02;
+L = 22.3; % in km
+x0 = 3.4;
+y0 = 0.3;
+alpha = 4.8;
 
-R0 = [x0;y0;0];
-r0 = norm(R0);
+n = shock_model(spec,eps,L,x0,y0,alpha);
+end
+
+function n = fairfield_meridian_no_4o_model(spec) %
+eps = 1.05;
+L = 20.5; % in km
+x0 = 4.6;
+y0 = 0.4;
+alpha = 5.2;
+
+n = shock_model(spec,eps,L,x0,y0,alpha);
+end
+
+function n = formisano_unnorm_model(spec) %
+eps = 0.97;
+L = 22.8; % in km
+x0 = 2.6;
+y0 = 1.1;
+alpha = 3.6;
+
+n = shock_model(spec,eps,L,x0,y0,alpha);
+end
+
+
+function n = shock_model(spec,eps,L,x0,y0,alpha) % Method from ISSI book
+u = irf_units;
 
 % rotation matrix
-M = [cosd(alpha),-sind(alpha),0;sind(alpha),cosd(alpha),0;0,0,1];
+R = [cosd(alpha),-sind(alpha),0;sind(alpha),cosd(alpha),0;0,0,1];
 
-R_sc = spec.R.gseR1(1,1:3)';
-r_sc = norm(R_sc);
+% offset from GSE
+r0 = [x0;y0;0];
 
-R_abd = M*R_sc-R0;
+% sc position in GSE (or GSM or whatever) in Earth radii
+rsc = spec.R.gseR1(1,1:3)'/(u.RE*1e-3);
 
-x_abd = R_abd(1);
-y_abd = R_abd(2);
-z_abd = R_abd(3);
+% Calculate sigma
+% sc position in the natural system (cartesian)
+rp = @(sig)R*rsc-sig.*r0;
+% sc polar angle in the natural system
+thp = @(sig)cart2pol([1,0,0]*rp(sig),[0,1,0]*rp(sig)); % returns angle first
+% minimize |LH-RH| in eq 10.22
+fval = @(sig)abs(sig.*L./sqrt(sum(rp(sig).^2,1))-1-eps*cos(thp(sig)));
 
-[th_abd,r_abd] = cart2pol(x_abd,norm([y_abd,z_abd]));
-
-
-% % Fit though sc position
-% sig = r_abd/L*(1+eps*cosd(th_abd))
-% L = sig*L;
-
-
-% alt
-p = ((r0^2-2*dot(M*R_sc,R0))/L)*(1+eps*cos(th_abd))^2;
-q = -r_sc^2/L^2*(1+eps*cos(th_abd))^2;
-sig = -p/2+sqrt((p/2)^2-q);
-%sig = -p/2-sqrt((p/2)^2-q)
-L = sig*L;
-
-A = [(x_abd*(1-eps^2)+eps*L)*cosd(alpha)+y_abd*sind(alpha);...
-    -(x_abd*(1-eps^2)+eps*L)*sind(alpha)+y_abd*cosd(alpha);...
-    z_abd];
-
-% gradient of surface
-gradS = A/(r_abd/(2*L));
-
-n = gradS'/norm(gradS);
+% find the best fit for sigma
+sig0 = fminsearch(fval,0);
 
 
+% calculate normal
+xp = [1,0,0]*rp(sig0);
+yp = [0,1,0]*rp(sig0);
+zp = [0,0,1]*rp(sig0);
 
+% gradient to model surface
+gradS = [(xp*(1-eps^2)+eps*sig0*L)*cosd(alpha)+yp*sind(alpha);...
+    -(xp*(1-eps^2)+eps*sig0*L)*sind(alpha)+yp*cosd(alpha);...
+    zp]/(norm(rp(sig0))*2*sig0*L);
+% normal vector
+n = gradS/norm(gradS);
 end
 
 

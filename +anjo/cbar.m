@@ -1,4 +1,4 @@
-function [out] = cbar(AX)
+function [out] = cbar(AX,clim)
 %ANJO.CBAR One colorbar for several panels.
 %   
 %   hcb = ANJO.CBAR(AX) Creates a colorbar that spans the right side of the
@@ -7,6 +7,12 @@ function [out] = cbar(AX)
 
 if nargin < 1
     AX = gca;
+end
+
+if nargin < 2
+    spec_clim = 0;
+else
+    spec_clim = 1;
 end
 
 
@@ -46,16 +52,18 @@ while(AX(1).Position(3) ~= ax_pos(3))
 end
 
 % Update clim for all axes
-clim = [+Inf, -Inf];
-
-for i = 1:n
-    cl = AX(i).CLim;
+if ~spec_clim
+    clim = [+Inf, -Inf];
     
-    if clim(1)>cl(1)
-        clim(1) = cl(1);
-    end
-    if clim(2)<cl(2)
-        clim(2) = cl(2);
+    for i = 1:n
+        cl = AX(i).CLim;
+        
+        if clim(1)>cl(1)
+            clim(1) = cl(1);
+        end
+        if clim(2)<cl(2)
+            clim(2) = cl(2);
+        end
     end
 end
 

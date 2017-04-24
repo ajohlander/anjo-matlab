@@ -56,14 +56,16 @@ F = q*(eF+cross([y(4),y(5),y(6)],bF));
 dy = zeros(6,1);
 
 if(inBounds) %Sets velocities to NaN if out of box
+    disp(['in bounds with x=',num2str(y(1))])
     dy(1) = y(4);
-    % dy(2) = y(5);
-    % dy(3) = y(6);
+    dy(2) = y(5);
+    dy(3) = y(6);
     
     dy(4) = F(1)/m;
     dy(5) = F(2)/m;
     dy(6) = F(3)/m;
 else
+    disp(['out of bounds with x=',num2str(y(1))])
     dy(1) = 0;
     % dy(2) = y(5);
     % dy(3) = y(6);
