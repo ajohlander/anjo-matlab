@@ -25,12 +25,16 @@ function [outp] = rankhug(inp)
 %       vda
 %       vdf
 %       Bd
-%       Vd      - In resonable units (I forget)
-%       Vd_Vu   - In units of the upstream velocity
-%       nd      - nu is always 1
+%       Vd      -   Downstream speed in upstream Va
+%       Vd_Vu   -   In units of the upstream velocity
+%       nd      -   nu is always 1
 %       Pd
 %       
-%
+%   Upstream parameters are (see code for the rest):
+%       Bu = [cosd(th),sind(th),0]
+%       Vu = [Mf*vms(th),0,0]
+%       nu = 1;
+%       
 
 
 
@@ -159,7 +163,7 @@ r = r0;
 outp = [];
 % special
 if strcmpi(inp.out{1},'full')
-    inp.out = {'Bd','Vd','nd','Pd','thd','betad','Mdf','MdI','vda','f4n','Vd_Vu'}; 
+    inp.out = {'Bd','Vd','nd','Pd','thd','betad','Mdf','MdI','vda','thdVn','f4n','Vd_Vu'}; 
 end 
 
 Bd = @(r)[Bn,Bdt(r),0];
@@ -169,7 +173,7 @@ Vd_Vu = @(r)[Vdn(r),Vdt(r),0]/Vu;
 thd = @(r)atand(Bdt(r)/Bn);
 betad = @(r)Pd(r)*2*mu0/norm(Bd(r))^2;
 
-thVnd = @(r)atand(Vdt(r)/Vdn(r));
+thdVn = @(r)atand(Vdt(r)/Vdn(r));
 
 vda = @(r)norm(Bd(r))/sqrt(nd(r)*m*mu0);
 cds = @(r)sqrt(gamma*betad(r)/2)*vda(r);

@@ -37,6 +37,12 @@ else
     yd = 'x';
 end
 
+if nargin >= 3+ish
+    V0 = varargin{3+ish};
+else
+    V0 = 0;
+end
+
 if ischar(yd)
     switch yd
         case 'x'
@@ -98,7 +104,7 @@ f = [];
 f.t = F.time.epochUnix;
 f.p = zeros(nt,nV);
 f.f_label = 'velocity [km/s]';
-f.f = vg;
+f.f = vg-V0;
 
 
 
@@ -108,7 +114,7 @@ PHI = repmat(F.depend{2},1,1,32,16);
 PHI = permute(PHI,[1,3,2,4]);
 VEL = repmat(vmat,1,1,32,16);
 
-[VX,VY,VZ] = sph2cart((PHI-180)*pi/180,(90-TH)*pi/180,VEL);
+[VX,VY,VZ] = sph2cart((PHI-180)*pi/180,(-90+TH)*pi/180,VEL);
 
 VN = VX.*vv(1)+VY.*vv(2)+VZ.*vv(3);
 
@@ -128,7 +134,7 @@ end
 
 %% Plotting
 f.p(f.p==0) = NaN;
-f.p = f.p*1e30;
+f.p = f.p;
 irf_spectrogram(AX,f);
 irf_timeaxis(AX)
 

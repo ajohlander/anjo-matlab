@@ -34,7 +34,7 @@ for i = 1:n
     end 
 end
 
-hcb = colorbar(AX(1));
+hcb = colorbar(AX(end));
 left = hcb.Position(1);
 
 ax_pos = AX(1).Position;

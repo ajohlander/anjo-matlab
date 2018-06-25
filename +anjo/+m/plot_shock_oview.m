@@ -67,7 +67,7 @@ anjo.box(hca,'on')
 
 
 %% test
-pause(0.2)
+pause(0.1)
 % title
 handles.title = irf_legend(handles.h(1),['MMS',E.name(4)],[.01,1.03],'interpreter','latex','fontsize',15);
 
